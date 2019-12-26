@@ -67,7 +67,7 @@ public class Musica {
         return etiquetas;
     }
 
-    private String getPath() {
+    public String getPath() {
         return this.getPath();
     }
 
@@ -124,9 +124,10 @@ public class Musica {
         return sb.toString();
     }
 
-   public Musica clone(Musica musica){
-        return new Musica(musica);
+   public Musica clone(){
+        return new Musica(this);
    }
+
    private void uploadFicheiro(byte[] bytesFicheiro){
         try (OutputStream fos = new FileOutputStream(this.path)) {
             fos.write(bytesFicheiro);
