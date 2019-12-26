@@ -2,10 +2,6 @@ import Exceptions.FormatoInvalidoException;
 import Exceptions.PasswordIncorretaException;
 import Exceptions.UtilizadorInexistenteException;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +21,7 @@ public class Sistema {
         }
     }
 
-    public void publicarMusica(String titulo, String interprete, int ano, List<String> etiquetas, String conteudoFicheiro,String formato){
+    public void publicarMusica(String titulo, String interprete, int ano, List<String> etiquetas, String conteudoFicheiro,String formato) throws FormatoInvalidoException {
         if(!FormatosMusicaEnum.validaFormato(formato)){
             throw new FormatoInvalidoException("O formato do ficheiro selecionado não é válido!");
         }

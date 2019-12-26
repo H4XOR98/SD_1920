@@ -120,6 +120,7 @@ public class Musica {
         for(String etiqueta : this.etiquetas){
             sb.append("\t-" + etiqueta);
         }
+        sb.append(this.path);
         return sb.toString();
     }
 
