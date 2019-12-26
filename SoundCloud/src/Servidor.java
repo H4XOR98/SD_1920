@@ -1,3 +1,4 @@
+import Exceptions.FormatoInvalidoException;
 import Exceptions.PasswordIncorretaException;
 import Exceptions.UtilizadorInexistenteException;
 
@@ -7,7 +8,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 public class Servidor {
     public static void main(String[] args) throws PasswordIncorretaException, UtilizadorInexistenteException, FormatoInvalidoException {

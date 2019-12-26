@@ -1,10 +1,12 @@
 
+import Exceptions.FormatoInvalidoException;
 import Exceptions.PasswordIncorretaException;
 import Exceptions.UtilizadorInexistenteException;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.List;
 
 public class SistemaRemoto implements SistemaInterface{

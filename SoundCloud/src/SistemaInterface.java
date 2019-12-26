@@ -1,3 +1,4 @@
+import Exceptions.FormatoInvalidoException;
 import Exceptions.PasswordIncorretaException;
 import Exceptions.UtilizadorInexistenteException;
 
