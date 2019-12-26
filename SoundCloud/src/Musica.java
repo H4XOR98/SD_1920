@@ -1,3 +1,5 @@
+import java.io.*;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,9 +9,12 @@ public class Musica {
     private String interprete;
     private int ano;
     private List<String> etiquetas;
+    private String path;
     private int numDownloads;
 
     private static int identificador = 0;
+    private final String pathDest = FileSystems.getDefault().getPath("").toAbsolutePath().toString() + "/Ficheiros/";
+
 
     public Musica(){
         this.id = identificador++;
@@ -17,18 +22,18 @@ public class Musica {
         this.interprete = "n/a";;
         this.ano = 0;
         this.etiquetas = new ArrayList<>();
+        this.path = "n/a";
         this.numDownloads = 0;
     }
 
-    public Musica(String titulo, String interprete, int ano,  List<String> etiquetas){
+    public Musica(String titulo, String interprete, int ano, List<String> etiquetas, byte[] bytesFicheiro, String formato) {
         this.id = identificador++;
         this.titulo = titulo;
         this.interprete = interprete;
         this.ano = ano;
-        this.etiquetas = new ArrayList<>();
-        for(String etiqueta : etiquetas){
-            this.etiquetas.add(etiqueta);
-        }
+        this.setEtiquetas(etiquetas);
+        this.path = this.pathDest + titulo + "_" + interprete + "." + formato;
+        this.uploadFicheiro(bytesFicheiro);
         this.numDownloads = 0;
     }
 
@@ -38,6 +43,7 @@ public class Musica {
         this.interprete = musica.getInterprete();
         this.ano = musica.getAno();
         this.etiquetas = musica.getEtiquetas();
+        this.path = musica.getPath();
         this.numDownloads = musica.getNumDownloads();
     }
 
@@ -61,10 +67,21 @@ public class Musica {
         return etiquetas;
     }
 
+    private String getPath() {
+        return this.getPath();
+    }
+
     private int getNumDownloads() {
         return this.numDownloads;
     }
 
+
+    private void setEtiquetas(List<String> etiquetas) {
+        this.etiquetas = new ArrayList<>();
+        for(String etiqueta : etiquetas){
+            this.etiquetas.add(etiqueta);
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -109,7 +126,13 @@ public class Musica {
    public Musica clone(Musica musica){
         return new Musica(musica);
    }
-
+   private void uploadFicheiro(byte[] bytesFicheiro){
+        try (OutputStream fos = new FileOutputStream(this.path)) {
+            fos.write(bytesFicheiro);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
 
    public void efetuarDownload(){
         this.numDownloads++;
