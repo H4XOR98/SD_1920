@@ -12,12 +12,11 @@ public class Musica {
     private String path;
     private int numDownloads;
 
-    private static int identificador = 0;
     private final String pathDest = FileSystems.getDefault().getPath("").toAbsolutePath().toString() + "/Ficheiros/";
 
 
     public Musica(){
-        this.id = identificador++;
+        this.id = -1;
         this.titulo = "n/a";
         this.interprete = "n/a";;
         this.ano = 0;
@@ -26,8 +25,8 @@ public class Musica {
         this.numDownloads = 0;
     }
 
-    public Musica(String titulo, String interprete, int ano, List<String> etiquetas, byte[] bytesFicheiro, String formato) {
-        this.id = identificador++;
+    public Musica(int id, String titulo, String interprete, int ano, List<String> etiquetas, byte[] bytesFicheiro, String formato) {
+        this.id = id;
         this.titulo = titulo;
         this.interprete = interprete;
         this.ano = ano;

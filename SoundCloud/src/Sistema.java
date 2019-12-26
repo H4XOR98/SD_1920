@@ -1,67 +1,54 @@
 import Exceptions.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Sistema {
+    private int idUtilizador;
+    private int idMusica;
     private Map<String,Utilizador> utilizadores;//nome,Utilizador
     private Map<Integer,Musica> musicas;//idMusica, musica
     private Map<String,List<Integer>> etiquetas;//etiqueta, lista de ids Musica
-
+    private ReentrantLock lockSistema;
 
     public Sistema(){
+        this.idUtilizador = 0;
+        this.idMusica = 0;
         this.utilizadores = new HashMap<>();
         this.musicas = new HashMap<>();
         this.etiquetas = new HashMap<>();
+        this.lockSistema = new ReentrantLock(true);
     }
 
-    private String[] parseString(String componentes){
-        String[] resultado = componentes.split("_");
-        return resultado;
-    }
 
-    public int criarConta(String componentes) throws OperacaoInvalidaException {
-        String[] partes = this.parseString(componentes);
-        if(partes.length != 3){
-            throw new OperacaoInvalidaException("Não foram indicados todos os componentes!");
-        }
-        String nome = partes[0];
-        String password = partes[1];
-        String pathDownload = partes[2];
-        Utilizador utilizador = new Utilizador(nome, password,pathDownload);
+
+    public int criarConta(String nome, String password, String pathDownload) {
+        lockSistema.lock();
+        Utilizador utilizador = new Utilizador(idUtilizador,nome, password,pathDownload);
         this.utilizadores.put(nome,utilizador);
+        this.idUtilizador++;
+        lockSistema.unlock();
         return utilizador.getId();
     }
 
-
-    public void loginUtilizador(String componentes) throws UtilizadorInexistenteException, PasswordIncorretaException, OperacaoInvalidaException {
-        String[] partes = this.parseString(componentes);
-        if(partes.length != 2){
-            throw new OperacaoInvalidaException("Não foram indicados todos os componentes!");
+    public void loginUtilizador(String nome, String password) throws UtilizadorInexistenteException, PasswordIncorretaException{
+        lockSistema.lock();
+        if(!this.utilizadores.containsKey(nome)){
+            throw new UtilizadorInexistenteException("Nome não existe no Sistema!");
         }
-        String email = partes[0];
-        String password = partes[1];
-        if(!this.utilizadores.containsKey(email)){
-            throw new UtilizadorInexistenteException("Email não existe no Sistema!");
-        }
-        Utilizador utilizador = this.utilizadores.get(email);
+        Utilizador utilizador = this.utilizadores.get(nome).clone();
+        lockSistema.unlock();
         if(!utilizador.comparaPassword(password)){
             throw new PasswordIncorretaException("A password inserida está incorreta");
         }
     }
 
-    /*public void uploadrMusica(String titulo, String interprete, int ano, List<String> etiquetas, String conteudoFicheiro,String formato) throws FormatoInvalidoException {
+
+    public void uploadMusica(String titulo, String interprete, int ano, String[] etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException {
         if(!FormatosMusicaEnum.validaFormato(formato)){
             throw new FormatoInvalidoException("O formato do ficheiro selecionado não é válido!");
         }
-        byte[] bytesFicheiro = conteudoFicheiro.getBytes();
-        Musica musica = new Musica(titulo,interprete,ano,etiquetas,bytesFicheiro,formato);
+        Musica musica = new Musica(this.idUtilizador++,titulo,interprete,ano, Arrays.asList(etiquetas),bytesFicheiro,formato);
         int id = musica.getId();
         musicas.put(id ,musica);
         for(String etiqueta : etiquetas){
@@ -73,7 +60,7 @@ public class Sistema {
     }
 
 
-    public List<Musica> procurarMusica(String etiqueta){
+    /*public List<Musica> procurarMusica(String etiqueta){
         List<Musica> resultado = new ArrayList<>();
         Musica m;
         List<Integer> listaIds = this.etiquetas.get(etiqueta);

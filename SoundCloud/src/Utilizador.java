@@ -1,24 +1,20 @@
-import java.nio.file.FileSystems;
 
-public class Utilizador {
+
+public class Utilizador  {
     private int id;
     private String nome;
     private String password;
     private String pathDownload;
 
-    private static int identificador = 0;
-
-
-
     public Utilizador(){
-        this.id = identificador++;
+        this.id = -1;
         this.nome = "n/a";
         this.password = "n/a";
         this.password = "n/a";
     }
 
-    public Utilizador(String nome, String password, String pathDownload) {
-        this.id = identificador++;
+    public Utilizador(int id, String nome, String password, String pathDownload) {
+        this.id = id;
         this.nome = nome;
         this.password = password;
         this.pathDownload = pathDownload;
@@ -55,8 +51,9 @@ public class Utilizador {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("---- Utilizador ----\n");
-        sb.append("Id : " + this.id + ";\n");
-        sb.append("Nome : " + this.nome + ";\n");
+        sb.append("Id: " + this.id + ";\n");
+        sb.append("Nome: " + this.nome + ";\n");
+        sb.append("Password : " + this.password + ";\n");
         sb.append("Path Destino: " + this.pathDownload + ";\n");
         return sb.toString();
     }
@@ -92,5 +89,4 @@ public class Utilizador {
     public boolean  comparaPassword(String password){
         return this.password.equals(password);
     }
-
 }
