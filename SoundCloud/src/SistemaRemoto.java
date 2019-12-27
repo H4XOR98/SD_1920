@@ -5,6 +5,7 @@ import Exceptions.UtilizadorInexistenteException;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.List;
@@ -36,15 +37,29 @@ public class SistemaRemoto implements SistemaInterface{
     }
 
     @Override
-    public void uploadMusica(String titulo, String interprete, int ano, List<String> etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException {
+    public void uploadMusica(String titulo, String interprete, int ano, List<String> etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException, IOException {
         String etiqueta = "";
         for (String e : etiquetas){
-            etiqueta += e + "|";
+            etiqueta += e + "_";
         }
-
         String bytes = Base64.getEncoder().encodeToString(bytesFicheiro);
         out.println("upload " + titulo + " " + interprete + " " + ano + " " + etiqueta + " " + bytes + " " + formato);
         out.flush();
+        System.out.println(in.readLine());
+    }
+
+    @Override
+    public List<String> procurarMusica(String etiqueta) throws IOException {
+        out.println("procura " + etiqueta);
+        out.flush();
+        String s = in.readLine();
+        String[] componentes = s.split(";");
+        List<String> resultado = new ArrayList<>();
+        for(String comp : componentes){
+            resultado.add(comp);
+            System.out.println(comp);
+        }
+        return resultado;
     }
 
 

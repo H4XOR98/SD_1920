@@ -25,7 +25,7 @@ public class Musica {
         this.numDownloads = 0;
     }
 
-    public Musica(int id, String titulo, String interprete, int ano, List<String> etiquetas, byte[] bytesFicheiro, String formato) {
+    public Musica(int id, String titulo, String interprete, int ano, byte[] bytesFicheiro, List<String> etiquetas, String formato) {
         this.id = id;
         this.titulo = titulo;
         this.interprete = interprete;
@@ -110,16 +110,17 @@ public class Musica {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("---- Música ----\n");
-        sb.append("Id : " + this.id + "; \n");
-        sb.append("Titulo : " + this.titulo + "; \n");
-        sb.append("Intérprete : " + this.interprete + "; \n");
-        sb.append("Ano : " + this.ano + "; \n");
-        sb.append("Etiquetas: \n");
+        sb.append("---- Música ----;");
+        sb.append("Id : " + this.id + ";");
+        sb.append("Titulo : " + this.titulo + ";");
+        sb.append("Intérprete : " + this.interprete + ";");
+        sb.append("Ano : " + this.ano + ";");
+        sb.append("Etiquetas: ");
         for(String etiqueta : this.etiquetas){
-            sb.append("\t-" + etiqueta);
+            sb.append("\t-" + etiqueta + "");
         }
-        sb.append(this.path);
+        sb.append(";Path: "+this.path + ";");
+        sb.append("Nº de Downloads: " + this.numDownloads);
         return sb.toString();
     }
 

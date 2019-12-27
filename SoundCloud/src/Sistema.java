@@ -45,48 +45,40 @@ public class Sistema {
 
 
     public void uploadMusica(String titulo, String interprete, int ano, String[] etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException {
-        if(!FormatosMusicaEnum.validaFormato(formato)){
+        this.lockSistema.lock();
+        if (!FormatosMusicaEnum.validaFormato(formato)) {
             throw new FormatoInvalidoException("O formato do ficheiro selecionado não é válido!");
         }
-        Musica musica = new Musica(this.idUtilizador++,titulo,interprete,ano, Arrays.asList(etiquetas),bytesFicheiro,formato);
+        Musica musica = new Musica(this.idUtilizador++, titulo, interprete, ano, bytesFicheiro, Arrays.asList(etiquetas), formato);
         int id = musica.getId();
-        musicas.put(id ,musica);
-        for(String etiqueta : etiquetas){
-            if(!this.etiquetas.containsKey(etiqueta)){
-                this.etiquetas.put(etiqueta,new ArrayList<>());
+        musicas.put(id, musica);
+        for (String etiqueta : etiquetas) {
+            if (!this.etiquetas.containsKey(etiqueta)) {
+                this.etiquetas.put(etiqueta, new ArrayList<>());
             }
             this.etiquetas.get(etiqueta).add(id);
         }
+        this.lockSistema.unlock();
     }
 
 
-    /*public List<Musica> procurarMusica(String etiqueta){
-        List<Musica> resultado = new ArrayList<>();
-        Musica m;
+    public List<String> procurarMusica(String etiqueta) throws EtiquetaInexistenteException{
+        List<String> resultado = new ArrayList<>();
+        Musica musica;
+        this.lockSistema.lock();
+        if(!this.etiquetas.containsKey(etiqueta)){
+            throw new EtiquetaInexistenteException("Etiqueta não existe no sistema");
+        }
         List<Integer> listaIds = this.etiquetas.get(etiqueta);
         for(int id : listaIds){
-            m = this.musicas.get(id);
-            resultado.add(m);
+            musica = this.musicas.get(id);
+            resultado.add(musica.toString());
         }
+        this.lockSistema.unlock();
         return resultado;
     }
 
-    private static void copyFile(String origem, String destino) throws IOException {
-        File ficheiroOrigem = new File(origem);
-        File ficheiroDestino = new File(destino);
-
-        FileInputStream fileInputStream = new FileInputStream(ficheiroOrigem);
-        FileOutputStream fileOutputStream = new FileOutputStream(ficheiroDestino);
-
-        int bufferSize;
-        byte[] bufffer = new byte[512];
-        while ((bufferSize = fileInputStream.read(bufffer)) > 0) {
-            fileOutputStream.write(bufffer, 0, bufferSize);
-        }
-        fileInputStream.close();
-        fileOutputStream.close();
-    }
-
+    /*
     public void downloadMusica(String componentes) throws MusicaInexistenteException, OperacaoInvalidaException {
         String[] partes = parseString(componentes);
         if(partes.length < 1){

@@ -19,13 +19,17 @@ public class Cliente {
             List<String> etiquetas = new ArrayList<>();
             etiquetas.add("Trance");
             etiquetas.add("EDM");
-            String p = "/Users/lazaropinheiro/Downloads/kygo.mp3";
+            String p = "/Users/lazaropinheiro/Downloads/carlos_t.mp3";
             Path path = Paths.get(p);
             byte[] bytes = Files.readAllBytes(path);
             sistemaRemoto.uploadMusica("Firestone","Kygo",2016,etiquetas,bytes,"mp3");
+            List<String> musicas = sistemaRemoto.procurarMusica("EDM");
+            /*for(String m : musicas){
+                System.out.println(m);
+            }*/
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (FormatoInvalidoException e) {
+        }catch (FormatoInvalidoException e) {
             e.printStackTrace();
         }
         /*try{

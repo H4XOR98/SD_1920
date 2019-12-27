@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -51,8 +50,29 @@ public class Servidor {
                             break;
                         case "upload":
                             byte[] bytesFicheiro = Base64.getDecoder().decode(op[5]);
-                            sistema.uploadMusica(op[1],op[2],Integer.parseInt(op[3]),op[4].split("|"),bytesFicheiro,op[6]);
+                            String[] etiquetas = op[4].split("_");
+                            try {
+                                sistema.uploadMusica(op[1], op[2], Integer.parseInt(op[3]), etiquetas, bytesFicheiro, op[6]);
+                                out.println("Upload realizado com sucesso!");
+                                out.flush();
+                            } catch (Exception e){
+                                out.println(e.getMessage());
+                                out.flush();
+                            }
                             break;
+                        case "procura":
+                            try {
+                                List<String> lista = sistema.procurarMusica(op[1]);
+                                String resultado = "";
+                                for(String m : lista){
+                                    resultado += m ;
+                                }
+                                out.println(resultado);
+                                out.flush();
+                            }catch (Exception e){
+                                out.println(e.getMessage());
+                                out.flush();
+                            }
                     }
 
                 }

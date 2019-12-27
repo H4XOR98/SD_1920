@@ -85,7 +85,6 @@ public class Utilizador  {
     }
 
 
-
     public boolean  comparaPassword(String password){
         return this.password.equals(password);
     }
