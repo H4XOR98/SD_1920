@@ -1,5 +1,6 @@
 
 import Exceptions.FormatoInvalidoException;
+import Exceptions.MusicaInexistenteException;
 import Exceptions.PasswordIncorretaException;
 import Exceptions.UtilizadorInexistenteException;
 
@@ -7,7 +8,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.List;
 
 public class SistemaRemoto implements SistemaInterface{
@@ -53,13 +53,36 @@ public class SistemaRemoto implements SistemaInterface{
         out.println("procura " + etiqueta);
         out.flush();
         String s = in.readLine();
-        String[] componentes = s.split(";");
+        String[] componentes = s.split(",");
         List<String> resultado = new ArrayList<>();
+        String musica;
         for(String comp : componentes){
-            resultado.add(comp);
-            System.out.println(comp);
+            musica = "";
+            for(String c : comp.split(";")){
+                musica += c + "\n";
+            }
+            resultado.add(musica);
         }
         return resultado;
+    }
+
+    @Override
+    public void downloadMusica(int idMusica) throws MusicaInexistenteException, IOException {
+        out.println("download " + idMusica + " lazaro");
+        out.flush();
+        String s = in.readLine();
+        String[] resultado = s.split(";");
+        if(resultado.length == 2){
+            String path = resultado[0];
+            byte[] bytesFicheiro = Base64.getDecoder().decode(resultado[1]);
+            try (OutputStream fos = new FileOutputStream(path)) {
+                fos.write(bytesFicheiro);
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }else{
+            System.out.println(resultado[0]);
+        }
     }
 
 

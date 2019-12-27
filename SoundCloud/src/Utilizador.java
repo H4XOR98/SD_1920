@@ -41,7 +41,7 @@ public class Utilizador  {
         return this.password;
     }
 
-    private String getPathDownload() {
+    public  String getPathDownload() {
         return this.pathDownload;
     }
 

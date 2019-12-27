@@ -1,5 +1,9 @@
 import Exceptions.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -43,13 +47,13 @@ public class Sistema {
         }
     }
 
-    /*
+
     public void uploadMusica(String titulo, String interprete, int ano, String[] etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException {
         this.lockSistema.lock();
         if (!FormatosMusicaEnum.validaFormato(formato)) {
             throw new FormatoInvalidoException("O formato do ficheiro selecionado não é válido!");
         }
-        Musica musica = new Musica(this.idUtilizador++, titulo, interprete, ano, bytesFicheiro, Arrays.asList(etiquetas), formato);
+        Musica musica = new Musica(this.idMusica++, titulo, interprete, ano, bytesFicheiro, Arrays.asList(etiquetas), formato);
         int id = musica.getId();
         musicas.put(id, musica);
         for (String etiqueta : etiquetas) {
@@ -67,7 +71,7 @@ public class Sistema {
         Musica musica;
         this.lockSistema.lock();
         if(!this.etiquetas.containsKey(etiqueta)){
-            throw new EtiquetaInexistenteException("Etiqueta não existe no sistema");
+            throw new EtiquetaInexistenteException("Etiqueta não existe no sistema!");
         }
         List<Integer> listaIds = this.etiquetas.get(etiqueta);
         for(int id : listaIds){
@@ -79,20 +83,29 @@ public class Sistema {
     }
 
 
-    public void downloadMusica(String componentes) throws MusicaInexistenteException, OperacaoInvalidaException {
-        String[] partes = parseString(componentes);
-        if(partes.length < 1){
-            throw new OperacaoInvalidaException("Não foram indicados todos os componentes!");
-        }
-        int id = Integer.parseInt(partes[0]);
-        String path = partes[1];
-        if(!this.musicas.containsKey(id)){
+    public String downloadMusica(int idMusica, String nome) throws MusicaInexistenteException, IOException {
+        this.lockSistema.lock();
+        if(!this.musicas.containsKey(idMusica)){
             throw new MusicaInexistenteException("Não existe nenhuma música com o id selecionado");
         }
-        this.musicas.get(id).efetuarDownload();
-        Musica m = this.musicas.get(id).clone();
-        String pathFile = m.getPath();
-        this.copyFile();
-    }*/
+        this.musicas.get(idMusica).efetuarDownload();
+        Musica musica = this.musicas.get(idMusica);
+
+        String pathDestino = this.utilizadores.get(nome).getPathDownload();
+        String titulo = musica.getTitulo();
+        String interprete = musica.getInterprete();
+        String formato = musica.getFormato();
+
+        String resultado = pathDestino + titulo + "_" +  interprete + "." + formato;
+
+        String p = musica.getPath();
+        Path path = Paths.get(p);
+        byte[] bytes = Files.readAllBytes(path);
+        String conteudo = Base64.getEncoder().encodeToString(bytes);
+        resultado += ";" + conteudo;
+        this.lockSistema.unlock();
+        return resultado;
+    }
+
 
 }

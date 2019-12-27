@@ -1,8 +1,12 @@
+import Exceptions.MusicaInexistenteException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Base64;
+import java.util.List;
 
 public class TaskRunner implements Runnable{
     private Socket socket;
@@ -49,6 +53,16 @@ public class TaskRunner implements Runnable{
             case "login":
                 this.login(op[1], op[2]);
                 break;
+            case "upload":
+                this.upload(op[1], op[2], op[3], op[4], op[5], op[6]);
+                break;
+            case "procura":
+                this.procura(op[1]);
+                break;
+            case "download":
+                this.download(op[1],op[2]);
+            default:
+                break;
         }
     }
 
@@ -62,6 +76,42 @@ public class TaskRunner implements Runnable{
             out.println("Bem vindo, " + nome + "!\n");
         }catch (Exception e){
             out.println(e.getMessage());
+        }
+    }
+
+    private void upload(String titulo, String interprete, String conteudoAno, String conteudoEtiquetas, String conteudoFicheiro, String formato){
+        try {
+            int ano = Integer.parseInt(conteudoAno);
+            String[] etiquetas = conteudoEtiquetas.split("_");
+            byte[] bytesFicheiro = Base64.getDecoder().decode(conteudoFicheiro);
+            sistema.uploadMusica(titulo,interprete,ano,etiquetas,bytesFicheiro,formato);
+            out.println("Upload realizado com sucesso!");
+        } catch (Exception e) {
+            out.println(e.getMessage());
+        }
+    }
+
+    private void procura(String etiqueta){
+        try {
+            List<String> lista = sistema.procurarMusica(etiqueta);
+            String resultado = "";
+            for(String m : lista){
+                resultado += m + ",";
+            }
+            out.println(resultado);
+        }catch (Exception e){
+            out.println(e.getMessage());
+        }
+    }
+
+    private void download(String id, String nome) {
+        try{
+            int idMusica = Integer.parseInt(id);
+            out.println(this.sistema.downloadMusica(idMusica,nome));
+        } catch (MusicaInexistenteException e) {
+            out.println(e.getMessage());
+        } catch (IOException e) {
+            out.println("ERRO! Impossível realizar download!");
         }
     }
 

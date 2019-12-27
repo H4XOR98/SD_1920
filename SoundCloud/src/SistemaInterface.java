@@ -1,4 +1,5 @@
 import Exceptions.FormatoInvalidoException;
+import Exceptions.MusicaInexistenteException;
 import Exceptions.PasswordIncorretaException;
 import Exceptions.UtilizadorInexistenteException;
 
@@ -13,4 +14,6 @@ public interface SistemaInterface {
     public void uploadMusica(String titulo, String interprete, int ano, List<String> etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException, IOException;
 
     public List<String> procurarMusica(String etiqueta) throws IOException;
+
+    public void downloadMusica(int idMusica) throws MusicaInexistenteException, IOException;
 }

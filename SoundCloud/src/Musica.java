@@ -10,6 +10,7 @@ public class Musica {
     private int ano;
     private List<String> etiquetas;
     private String path;
+    private String formato;
     private int numDownloads;
 
     private final String pathDest = FileSystems.getDefault().getPath("").toAbsolutePath().toString() + "/Ficheiros/";
@@ -22,6 +23,7 @@ public class Musica {
         this.ano = 0;
         this.etiquetas = new ArrayList<>();
         this.path = "n/a";
+        this.formato = "n/a";
         this.numDownloads = 0;
     }
 
@@ -32,6 +34,7 @@ public class Musica {
         this.ano = ano;
         this.setEtiquetas(etiquetas);
         this.path = this.pathDest + titulo + "_" + interprete + "." + formato;
+        this.formato = formato;
         this.uploadFicheiro(bytesFicheiro);
         this.numDownloads = 0;
     }
@@ -43,6 +46,7 @@ public class Musica {
         this.ano = musica.getAno();
         this.etiquetas = musica.getEtiquetas();
         this.path = musica.getPath();
+        this.formato = musica.getFormato();
         this.numDownloads = musica.getNumDownloads();
     }
 
@@ -67,7 +71,11 @@ public class Musica {
     }
 
     public String getPath() {
-        return this.getPath();
+        return this.path;
+    }
+
+    public String getFormato(){
+        return this.formato;
     }
 
     private int getNumDownloads() {
