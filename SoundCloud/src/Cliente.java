@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class Cliente {
     public static void main(String[] args) {
         SistemaRemoto sistemaRemoto;
-        try{
+        /*try{
             sistemaRemoto = new SistemaRemoto();
             List<String> etiquetas = new ArrayList<>();
             etiquetas.add("Trance");
@@ -24,15 +24,15 @@ public class Cliente {
             byte[] bytes = Files.readAllBytes(path);
             sistemaRemoto.uploadMusica("Firestone","Kygo",2016,etiquetas,bytes,"mp3");
             List<String> musicas = sistemaRemoto.procurarMusica("EDM");
-            /*for(String m : musicas){
+            for(String m : musicas){
                 System.out.println(m);
-            }*/
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }catch (FormatoInvalidoException e) {
             e.printStackTrace();
-        }
-        /*try{
+        }*/
+        try{
             sistemaRemoto = new SistemaRemoto();
             Scanner sc = new Scanner(System.in);
             System.out.println("------ CRIAR CONTA -----");
@@ -52,6 +52,6 @@ public class Cliente {
             e.printStackTrace();
         } catch (PasswordIncorretaException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 }

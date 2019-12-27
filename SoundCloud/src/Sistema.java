@@ -32,18 +32,18 @@ public class Sistema {
     }
 
     public void loginUtilizador(String nome, String password) throws UtilizadorInexistenteException, PasswordIncorretaException{
-        lockSistema.lock();
+        this.lockSistema.lock();
         if(!this.utilizadores.containsKey(nome)){
             throw new UtilizadorInexistenteException("Nome não existe no Sistema!");
         }
         Utilizador utilizador = this.utilizadores.get(nome).clone();
-        lockSistema.unlock();
+        this.lockSistema.unlock();
         if(!utilizador.comparaPassword(password)){
-            throw new PasswordIncorretaException("A password inserida está incorreta");
+            throw new PasswordIncorretaException("A password inserida está incorreta!");
         }
     }
 
-
+    /*
     public void uploadMusica(String titulo, String interprete, int ano, String[] etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException {
         this.lockSistema.lock();
         if (!FormatosMusicaEnum.validaFormato(formato)) {
@@ -78,7 +78,7 @@ public class Sistema {
         return resultado;
     }
 
-    /*
+
     public void downloadMusica(String componentes) throws MusicaInexistenteException, OperacaoInvalidaException {
         String[] partes = parseString(componentes);
         if(partes.length < 1){

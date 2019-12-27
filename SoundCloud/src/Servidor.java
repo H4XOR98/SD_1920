@@ -12,8 +12,14 @@ import java.util.Base64;
 import java.util.List;
 
 public class Servidor {
-    public static void main(String[] args) throws PasswordIncorretaException, UtilizadorInexistenteException, FormatoInvalidoException {
-        try {
+    public static void main(String[] args) throws IOException {
+        ServerSocket s = new ServerSocket(12345);
+        while(true){
+            Socket socket = s.accept();
+            Sistema sistema = new Sistema();
+            new Thread(new TaskRunner(socket, sistema)).start();
+        }
+        /*try {
 
             ServerSocket serverSocket = new ServerSocket(12345);
 
@@ -84,6 +90,6 @@ public class Servidor {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }
