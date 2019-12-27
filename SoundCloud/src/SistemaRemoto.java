@@ -30,10 +30,16 @@ public class SistemaRemoto implements SistemaInterface{
     }
 
     @Override
-    public void loginUtilizador(String nome, String password) throws UtilizadorInexistenteException, PasswordIncorretaException, IOException {
+    public String loginUtilizador(String nome, String password) throws UtilizadorInexistenteException, PasswordIncorretaException, IOException {
         out.println("login " + nome + " " + password);
         out.flush();
-        System.out.println(in.readLine());
+        String resultado = in.readLine();
+        if(resultado.equals("UtilizadorInexistenteException")){
+            throw new UtilizadorInexistenteException("Nome não existe no Sistema!");
+        }else if(resultado.equals("PasswordIncorretaException")){
+            throw new PasswordIncorretaException("A password inserida está incorreta!");
+        }
+        return resultado;
     }
 
     @Override

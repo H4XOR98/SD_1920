@@ -72,8 +72,7 @@ public class TaskRunner implements Runnable{
 
     private void login(String nome, String password){
         try {
-            sistema.loginUtilizador(nome, password);
-            out.println("Bem vindo, " + nome + "!\n");
+            out.println(sistema.loginUtilizador(nome, password));
         }catch (Exception e){
             out.println(e.getMessage());
         }
@@ -85,7 +84,6 @@ public class TaskRunner implements Runnable{
             String[] etiquetas = conteudoEtiquetas.split("_");
             byte[] bytesFicheiro = Base64.getDecoder().decode(conteudoFicheiro);
             sistema.uploadMusica(titulo,interprete,ano,etiquetas,bytesFicheiro,formato);
-            out.println("Upload realizado com sucesso!");
         } catch (Exception e) {
             out.println(e.getMessage());
         }

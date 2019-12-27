@@ -30,28 +30,29 @@ public class Sistema {
         lockSistema.lock();
         Utilizador utilizador = new Utilizador(idUtilizador,nome, password,pathDownload);
         this.utilizadores.put(nome,utilizador);
-        this.idUtilizador++;
+        int id = this.idUtilizador++;
         lockSistema.unlock();
-        return utilizador.getId();
+        return id;
     }
 
-    public void loginUtilizador(String nome, String password) throws UtilizadorInexistenteException, PasswordIncorretaException{
+    public String loginUtilizador(String nome, String password) throws UtilizadorInexistenteException, PasswordIncorretaException{
         this.lockSistema.lock();
         if(!this.utilizadores.containsKey(nome)){
-            throw new UtilizadorInexistenteException("Nome não existe no Sistema!");
+            throw new UtilizadorInexistenteException("UtilizadorInexistenteException");
         }
         Utilizador utilizador = this.utilizadores.get(nome).clone();
-        this.lockSistema.unlock();
         if(!utilizador.comparaPassword(password)){
             throw new PasswordIncorretaException("A password inserida está incorreta!");
         }
+        this.lockSistema.unlock();
+        return nome;
     }
 
 
     public void uploadMusica(String titulo, String interprete, int ano, String[] etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException {
         this.lockSistema.lock();
         if (!FormatosMusicaEnum.validaFormato(formato)) {
-            throw new FormatoInvalidoException("O formato do ficheiro selecionado não é válido!");
+            throw new FormatoInvalidoException("FormatoInvalidoException");
         }
         Musica musica = new Musica(this.idMusica++, titulo, interprete, ano, bytesFicheiro, Arrays.asList(etiquetas), formato);
         int id = musica.getId();
