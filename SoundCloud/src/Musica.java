@@ -2,6 +2,7 @@ import java.io.*;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Musica {
     private int id;
@@ -12,6 +13,7 @@ public class Musica {
     private String path;
     private String formato;
     private int numDownloads;
+    private ReentrantLock lockMusica;
 
     private final String pathDest = FileSystems.getDefault().getPath("").toAbsolutePath().toString() + "/Ficheiros/";
 
@@ -25,6 +27,7 @@ public class Musica {
         this.path = "n/a";
         this.formato = "n/a";
         this.numDownloads = 0;
+        this.lockMusica = new ReentrantLock(true);
     }
 
     public Musica(int id, String titulo, String interprete, int ano, byte[] bytesFicheiro, List<String> etiquetas, String formato) {
@@ -37,6 +40,7 @@ public class Musica {
         this.formato = formato;
         this.uploadFicheiro(bytesFicheiro);
         this.numDownloads = 0;
+        this.lockMusica = new ReentrantLock(true);
     }
 
     public Musica(Musica musica){
@@ -48,6 +52,7 @@ public class Musica {
         this.path = musica.getPath();
         this.formato = musica.getFormato();
         this.numDownloads = musica.getNumDownloads();
+        this.lockMusica = new ReentrantLock(true);
     }
 
     public int getId() {
@@ -146,5 +151,13 @@ public class Musica {
 
    public void efetuarDownload(){
         this.numDownloads++;
+   }
+
+   public void lock(){
+        this.lockMusica.lock();
+   }
+
+   public void unlock(){
+        this.lockMusica.unlock();
    }
 }

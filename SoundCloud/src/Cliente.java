@@ -107,6 +107,7 @@ public class Cliente {
                         String[] partes = nomeFicheiro.split("_");
                         formato = partes[partes.length - 1].substring(partes[partes.length - 1].lastIndexOf(".") + 1);
                         sistemaRemoto.uploadMusica(titulo, interprete, ano, etiquetas, bytesFicheiro, formato);
+                        System.out.println("Upload realizado com sucesso");
                     } catch (FormatoInvalidoException e) {
                         System.out.println(e.getMessage());
                     } catch (IOException e) {

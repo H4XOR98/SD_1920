@@ -1,16 +1,18 @@
-
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Utilizador  {
     private int id;
     private String nome;
     private String password;
     private String pathDownload;
+    private ReentrantLock lockUtilizador;
 
     public Utilizador(){
         this.id = -1;
         this.nome = "n/a";
         this.password = "n/a";
         this.password = "n/a";
+        this.lockUtilizador = new ReentrantLock(true);
     }
 
     public Utilizador(int id, String nome, String password, String pathDownload) {
@@ -18,6 +20,7 @@ public class Utilizador  {
         this.nome = nome;
         this.password = password;
         this.pathDownload = pathDownload;
+        this.lockUtilizador = new ReentrantLock(true);
     }
 
     public Utilizador(Utilizador utilizador){
@@ -25,6 +28,7 @@ public class Utilizador  {
         this.nome = utilizador.getNome();
         this.password = utilizador.getPassword();
         this.pathDownload = utilizador.getPathDownload();
+        this.lockUtilizador = new ReentrantLock(true);
     }
 
 
@@ -87,5 +91,13 @@ public class Utilizador  {
 
     public boolean  comparaPassword(String password){
         return this.password.equals(password);
+    }
+
+    public void lock(){
+        this.lockUtilizador.lock();
+    }
+
+    public void unlock(){
+        this.lockUtilizador.unlock();
     }
 }
