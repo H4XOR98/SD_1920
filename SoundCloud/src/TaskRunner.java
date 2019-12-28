@@ -84,6 +84,7 @@ public class TaskRunner implements Runnable{
             String[] etiquetas = conteudoEtiquetas.split("_");
             byte[] bytesFicheiro = Base64.getDecoder().decode(conteudoFicheiro);
             sistema.uploadMusica(titulo,interprete,ano,etiquetas,bytesFicheiro,formato);
+            out.println("sucesso");
         } catch (Exception e) {
             out.println(e.getMessage());
         }

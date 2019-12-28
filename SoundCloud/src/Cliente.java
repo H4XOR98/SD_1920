@@ -18,31 +18,30 @@ public class Cliente {
         try{
             String nome, password, path;
             sistemaRemoto = new SistemaRemoto();
-            View view = new View();
             int op;
             do{
-                view.menuInical();
+                View.menuInical();
                 op = Input.lerInt();
                 switch (op){
                    case 1:
-                       view.titulo();
+                       View.titulo();
                        System.out.println("Introduza o seu nome:");
                        nome = Input.lerString();
-                       System.out.println("Introduza uma password:");
+                       System.out.println("Introduza a sua password:");
                        password = Input.lerString();
                        try {
                            nome = sistemaRemoto.loginUtilizador(nome, password);
                            System.out.println("Bem vindo, " + nome);
+                           logado(nome,sistemaRemoto);
                        } catch (UtilizadorInexistenteException e) {
                            System.out.println(e.getMessage());
                        } catch (PasswordIncorretaException e) {
                            System.out.println(e.getMessage());
                        }
-                       view.menuLogado();
 
                        break;
                    case 2:
-                       view.titulo();
+                       View.titulo();
                        System.out.println("Introduza o seu nome:");
                        nome = Input.lerString();
                        System.out.println("Introduza uma password:");
@@ -57,6 +56,7 @@ public class Cliente {
                        System.exit(0);
                        break;
                    default:
+                       System.out.println("ERRO! Opção inválida!");
                        break;
                }
 
@@ -66,8 +66,65 @@ public class Cliente {
         }
     }
 
-    /*
-    public static void main(String[] args) {
+
+    private static void logado(String nomeUtilizador,SistemaRemoto sistemaRemoto){
+        int op = -1;
+        int op1 = -1;
+        String titulo, interprete, formato;
+        int ano;
+        List<String> etiquetas;
+        byte[] bytesFicheiro;
+        String aux;
+        do{
+            View.menuLogado();
+            op = Input.lerInt();
+            switch (op){
+                case 1:
+                    View.titulo();
+                    System.out.println("Introduza o titulo");
+                    titulo = Input.lerString();
+                    System.out.println("Introduza o interprete");
+                    interprete = Input.lerString();
+                    System.out.println("Introduza o ano");
+                    ano = Input.lerInt();
+                    System.out.println("Etiquetas");
+                    etiquetas = new ArrayList<>();
+                    do{
+                        View.menuEtiquetas();
+                        op1 = Input.lerInt();
+                        if(op1 != 0) {
+                            System.out.println("Introduza etiqueta:");
+                            aux = Input.lerString();
+                            etiquetas.add(aux);
+                        }
+                    }while(op1 != 0);
+                    System.out.println("Insira a path do fiheiro que pretende dar upload");
+                    aux = Input.lerString();
+                    Path path = Paths.get(aux);
+                    try {
+                        bytesFicheiro = Files.readAllBytes(path);
+                        String nomeFicheiro = path.getFileName().toString();
+                        String[] partes = nomeFicheiro.split("_");
+                        formato = partes[partes.length - 1].substring(partes[partes.length - 1].lastIndexOf(".") + 1);
+                        sistemaRemoto.uploadMusica(titulo, interprete, ano, etiquetas, bytesFicheiro, formato);
+                    } catch (FormatoInvalidoException e) {
+                        System.out.println(e.getMessage());
+                    } catch (IOException e) {
+                        System.out.println("ERRO! Impossível carregar ficheiro");
+                    }
+                    break;
+                case 2:
+
+                    break;
+                case 3:
+
+                    break;
+                default:
+                    break;
+            }
+        }while(op != 0);
+    }
+    /*public static void main(String[] args) {
         SistemaRemoto sistemaRemoto;
         try{
             sistemaRemoto = new SistemaRemoto();

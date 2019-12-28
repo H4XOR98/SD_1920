@@ -51,7 +51,10 @@ public class SistemaRemoto implements SistemaInterface{
         String bytes = Base64.getEncoder().encodeToString(bytesFicheiro);
         out.println("upload " + titulo + " " + interprete + " " + ano + " " + etiqueta + " " + bytes + " " + formato);
         out.flush();
-        System.out.println(in.readLine());
+        String resultado = in.readLine();
+        if(resultado.equals("FormatoInvalidoException")){
+            throw new FormatoInvalidoException("O formato do ficheiro indicado é invalido!");
+        }
     }
 
     @Override
