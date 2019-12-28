@@ -1,4 +1,4 @@
-import Exceptions.MusicaInexistenteException;
+import Exceptions.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class TaskRunner implements Runnable{
     private void runCommand(String[] op) {
         switch (op[0]) {
             case "criar_conta":
-                this.criarConta(op[1],op[2],op[3]);
+                this.criarConta(op[1],op[2]);
                 break;
             case "login":
                 this.login(op[1], op[2]);
@@ -66,14 +66,25 @@ public class TaskRunner implements Runnable{
         }
     }
 
-    private void criarConta(String nome, String password, String pathDownload){
-        out.println(sistema.criarConta(nome, password, pathDownload));
+    private void criarConta(String nome, String password){
+        try {
+            int id = sistema.criarConta(nome, password);
+            out.println(id);
+            System.out.println("O " + nome + " acabou de criar uma conta com o id " + id);
+        } catch (UtilizadorJaExisteException e) {
+            out.println(e.getMessage());
+        }
     }
 
     private void login(String nome, String password){
         try {
             out.println(sistema.loginUtilizador(nome, password));
-        }catch (Exception e){
+            System.out.println("O " + nome + " acabou de iniciar sessão");
+        }catch (UtilizadorInexistenteException e){
+            System.out.println("O " +  nome + " não existe no sistema");
+            out.println(e.getMessage());
+        }catch(PasswordIncorretaException e){
+            System.out.println("O " +  nome + " enganou-se na password");
             out.println(e.getMessage());
         }
     }
@@ -85,7 +96,9 @@ public class TaskRunner implements Runnable{
             byte[] bytesFicheiro = Base64.getDecoder().decode(conteudoFicheiro);
             sistema.uploadMusica(titulo,interprete,ano,etiquetas,bytesFicheiro,formato);
             out.println("sucesso");
-        } catch (Exception e) {
+            System.out.println("Foi adicionada a musica " + titulo + "_" + interprete + "." + formato);
+        } catch (FormatoInvalidoException e) {
+            System.out.println("O formato da música selecionado não é permitido");
             out.println(e.getMessage());
         }
     }
@@ -94,19 +107,20 @@ public class TaskRunner implements Runnable{
         try {
             List<String> lista = sistema.procurarMusica(etiqueta);
             String resultado = "";
-            for(String m : lista){
+            for (String m : lista) {
                 resultado += m + ",";
             }
             out.println(resultado);
-        }catch (Exception e){
+        } catch (EtiquetaInexistenteException e) {
+            System.out.println(e.getMessage());
             out.println(e.getMessage());
         }
     }
 
-    private void download(String id, String nome) {
+    private void download(String id, String pathDestino) {
         try{
             int idMusica = Integer.parseInt(id);
-            out.println(this.sistema.downloadMusica(idMusica,nome));
+            out.println(this.sistema.downloadMusica(idMusica,pathDestino));
         } catch (MusicaInexistenteException e) {
             out.println(e.getMessage());
         } catch (IOException e) {

@@ -11,15 +11,13 @@ public class Utilizador  {
         this.id = -1;
         this.nome = "n/a";
         this.password = "n/a";
-        this.password = "n/a";
         this.lockUtilizador = new ReentrantLock(true);
     }
 
-    public Utilizador(int id, String nome, String password, String pathDownload) {
+    public Utilizador(int id, String nome, String password) {
         this.id = id;
         this.nome = nome;
         this.password = password;
-        this.pathDownload = pathDownload;
         this.lockUtilizador = new ReentrantLock(true);
     }
 
@@ -27,10 +25,8 @@ public class Utilizador  {
         this.id = utilizador.getId();
         this.nome = utilizador.getNome();
         this.password = utilizador.getPassword();
-        this.pathDownload = utilizador.getPathDownload();
         this.lockUtilizador = new ReentrantLock(true);
     }
-
 
 
     public int getId() {
@@ -45,11 +41,6 @@ public class Utilizador  {
         return this.password;
     }
 
-    public  String getPathDownload() {
-        return this.pathDownload;
-    }
-
-
 
     @Override
     public String toString() {
@@ -58,7 +49,6 @@ public class Utilizador  {
         sb.append("Id: " + this.id + ";\n");
         sb.append("Nome: " + this.nome + ";\n");
         sb.append("Password : " + this.password + ";\n");
-        sb.append("Path Destino: " + this.pathDownload + ";\n");
         return sb.toString();
     }
 
@@ -80,7 +70,6 @@ public class Utilizador  {
         hash = 31 * hash + (int) id;
         hash = 31 * hash + (this.nome == null ? 0 : this.nome.hashCode());
         hash = 31 * hash + (this.password == null ? 0 : this.password.hashCode());
-        hash = 31 * hash + (this.pathDownload == null ? 0 : this.pathDownload.hashCode());
         return hash;
     }
 

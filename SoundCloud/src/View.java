@@ -23,15 +23,25 @@ public class View {
         System.out.println("1 - Upload de Conteudo");
         System.out.println("2 - Procurar Música");
         System.out.println("3 - Download de Conteudo");
-        System.out.println("0 - Voltar");
+        System.out.println("0 - Terminar Sessão");
         System.out.println("\nIntroduza a sua opção.");
         System.out.println("Opção:");
     }
 
     public static void menuEtiquetas(){
-        System.out.println("\n1 - Introduzir nova etiqueta");
+        System.out.println("\n******** Etiquetas ********");
+        System.out.println("1 - Introduzir nova etiqueta");
         System.out.println("0 - Voltar");
-        System.out.println("\nIntroduza a sua opção.");
+        System.out.println("\nIntroduza a sua opção");
         System.out.println("Opção:");
+    }
+
+    public static void viewException(String mensagem){
+        System.out.println("-----------------------------------------------------");
+        System.out.println("                        ERRO!");
+        System.out.println(" ");
+        System.out.println(mensagem);
+        System.out.println("-----------------------------------------------------");
+
     }
 }

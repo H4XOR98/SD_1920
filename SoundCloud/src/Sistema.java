@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
 
 public class Sistema {
     private int idUtilizador;
@@ -29,9 +30,12 @@ public class Sistema {
 
 
 
-    public int criarConta(String nome, String password, String pathDownload) {
+    public int criarConta(String nome, String password) throws UtilizadorJaExisteException {
         lockUtilizadores.lock();
-        Utilizador utilizador = new Utilizador(idUtilizador,nome, password,pathDownload);
+        if(this.utilizadores.containsKey(nome)){
+            throw new UtilizadorJaExisteException("UtilizadorJaExisteException");
+        }
+        Utilizador utilizador = new Utilizador(idUtilizador,nome, password);
         this.utilizadores.put(nome,utilizador);
         int id = this.idUtilizador++;
         lockUtilizadores.unlock();
@@ -49,7 +53,7 @@ public class Sistema {
         this.lockUtilizadores.unlock();
         if(!utilizador.comparaPassword(password)){
             utilizador.unlock();
-            throw new PasswordIncorretaException("A password inserida está incorreta!");
+            throw new PasswordIncorretaException("PasswordIncorretaException");
         }
         utilizador.unlock();
         return nome;
@@ -57,12 +61,13 @@ public class Sistema {
 
 
     public void uploadMusica(String titulo, String interprete, int ano, String[] etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException {
+        this.lockMusicas.lock();
         if (!FormatosMusicaEnum.validaFormato(formato)) {
+            this.lockMusicas.unlock();
             throw new FormatoInvalidoException("FormatoInvalidoException");
         }
         Musica musica = new Musica(this.idMusica++, titulo, interprete, ano, bytesFicheiro, Arrays.asList(etiquetas), formato);
         int id = musica.getId();
-        this.lockMusicas.lock();
         musicas.put(id, musica);
         for (String etiqueta : etiquetas) {
             if (!this.etiquetas.containsKey(etiqueta)) {
@@ -79,32 +84,32 @@ public class Sistema {
         Musica musica;
         this.lockMusicas.lock();
         if(!this.etiquetas.containsKey(etiqueta)){
-            throw new EtiquetaInexistenteException("Etiqueta não existe no sistema!");
+            this.lockMusicas.unlock();
+            throw new EtiquetaInexistenteException("EtiquetaInexistenteException");
         }
         List<Integer> listaIds = this.etiquetas.get(etiqueta);
         for(int id : listaIds){
             musica = this.musicas.get(id);
+            musica.lock();
             resultado.add(musica.toString());
+            musica.unlock();
         }
         this.lockMusicas.unlock();
         return resultado;
     }
 
 
-    public String downloadMusica(int idMusica, String nome) throws MusicaInexistenteException, IOException {
+    public String downloadMusica(int idMusica, String pathDestino) throws MusicaInexistenteException, IOException {
         this.lockMusicas.lock();
         if(!this.musicas.containsKey(idMusica)){
             this.lockMusicas.unlock();
-            throw new MusicaInexistenteException("Não existe nenhuma música com o id selecionado");
+            throw new MusicaInexistenteException("MusicaInexistenteException");
         }
-        this.musicas.get(idMusica).efetuarDownload();
         Musica musica = this.musicas.get(idMusica);
         musica.lock();
+        musica.efetuarDownload();
         this.lockMusicas.unlock();
 
-        this.lockUtilizadores.lock();
-        String pathDestino = this.utilizadores.get(nome).getPathDownload();
-        this.lockUtilizadores.unlock();
         String titulo = musica.getTitulo();
         String interprete = musica.getInterprete();
         String formato = musica.getFormato();
@@ -112,13 +117,11 @@ public class Sistema {
         String resultado = pathDestino + titulo + "_" +  interprete + "." + formato;
 
         String p = musica.getPath();
-        musica.unlock();
         Path path = Paths.get(p);
         byte[] bytes = Files.readAllBytes(path);
         String conteudo = Base64.getEncoder().encodeToString(bytes);
         resultado += ";" + conteudo;
+        musica.unlock();
         return resultado;
     }
-
-
 }

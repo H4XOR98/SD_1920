@@ -143,7 +143,9 @@ public class Musica {
 
    private void uploadFicheiro(byte[] bytesFicheiro){
         try (OutputStream fos = new FileOutputStream(this.path)) {
-            fos.write(bytesFicheiro);
+            if(bytesFicheiro != null) {
+                fos.write(bytesFicheiro);
+            }
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }

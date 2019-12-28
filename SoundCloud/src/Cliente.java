@@ -1,7 +1,4 @@
-import Exceptions.FormatoInvalidoException;
-import Exceptions.MusicaInexistenteException;
-import Exceptions.PasswordIncorretaException;
-import Exceptions.UtilizadorInexistenteException;
+import Exceptions.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +13,7 @@ public class Cliente {
     public static void main(String[] args) {
         SistemaRemoto sistemaRemoto;
         try{
-            String nome, password, path;
+            String nome, password;
             sistemaRemoto = new SistemaRemoto();
             int op;
             do{
@@ -34,9 +31,9 @@ public class Cliente {
                            System.out.println("Bem vindo, " + nome);
                            logado(nome,sistemaRemoto);
                        } catch (UtilizadorInexistenteException e) {
-                           System.out.println(e.getMessage());
+                           View.viewException(e.getMessage());
                        } catch (PasswordIncorretaException e) {
-                           System.out.println(e.getMessage());
+                           View.viewException(e.getMessage());
                        }
 
                        break;
@@ -46,23 +43,25 @@ public class Cliente {
                        nome = Input.lerString();
                        System.out.println("Introduza uma password:");
                        password = Input.lerString();
-                       System.out.println("Introduza a path para Download de Música:");
-                       String pathDownload = Input.lerString();
-                       int id = sistemaRemoto.criarConta(nome, password, pathDownload);
-                       System.out.println("O id da sua conta é o " + id + ".");
+                       try {
+                           int id = sistemaRemoto.criarConta(nome, password);
+                           System.out.println("O id da sua conta é o " + id + ".");
+                       } catch (UtilizadorJaExisteException e) {
+                           View.viewException(e.getMessage());
+                       }
                        break;
                    case 0:
                        System.out.println("Até Breve!");
                        System.exit(0);
                        break;
                    default:
-                       System.out.println("ERRO! Opção inválida!");
+                       View.viewException("       Opção inválida!       ");
                        break;
                }
 
            }while(true);
         } catch (IOException e) {
-            e.printStackTrace();
+            View.viewException("Algo de errado aconteceu com a ligação ao servidor");
         }
     }
 
@@ -70,7 +69,7 @@ public class Cliente {
     private static void logado(String nomeUtilizador,SistemaRemoto sistemaRemoto){
         int op = -1;
         int op1 = -1;
-        String titulo, interprete, formato;
+        String titulo, interprete, formato, etiqueta;
         int ano;
         List<String> etiquetas;
         byte[] bytesFicheiro;
@@ -79,6 +78,13 @@ public class Cliente {
             View.menuLogado();
             op = Input.lerInt();
             switch (op){
+                case 0:
+                    try {
+                        sistemaRemoto.logoutUtilizador();
+                    } catch (IOException e) {
+                        View.viewException("Erro ao terminar sessão");
+                    }
+                    break;
                 case 1:
                     View.titulo();
                     System.out.println("Introduza o titulo");
@@ -87,7 +93,6 @@ public class Cliente {
                     interprete = Input.lerString();
                     System.out.println("Introduza o ano");
                     ano = Input.lerInt();
-                    System.out.println("Etiquetas");
                     etiquetas = new ArrayList<>();
                     do{
                         View.menuEtiquetas();
@@ -109,13 +114,28 @@ public class Cliente {
                         sistemaRemoto.uploadMusica(titulo, interprete, ano, etiquetas, bytesFicheiro, formato);
                         System.out.println("Upload realizado com sucesso");
                     } catch (FormatoInvalidoException e) {
-                        System.out.println(e.getMessage());
+                        View.viewException(e.getMessage());
                     } catch (IOException e) {
-                        System.out.println("ERRO! Impossível carregar ficheiro");
+                        View.viewException("Impossível carregar ficheiro");
                     }
                     break;
                 case 2:
-
+                    View.titulo();
+                    System.out.println("Introduza uma etiqueta");
+                    etiqueta = Input.lerString();
+                    try {
+                         etiquetas = sistemaRemoto.procurarMusica(etiqueta);
+                         op1 = 0;
+                         ListagemLista listagem = new ListagemLista("Lista de Músicas",etiquetas);
+                         do {
+                             listagem.show(op1);
+                             op1 = Input.lerInt();
+                         }while(op1!=0);
+                    } catch (EtiquetaInexistenteException e) {
+                        View.viewException(e.getMessage());
+                    } catch (IOException e) {
+                        View.viewException(e.getMessage());
+                    }
                     break;
                 case 3:
 

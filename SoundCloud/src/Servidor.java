@@ -6,9 +6,9 @@ import java.net.Socket;
 public class Servidor {
     public static void main(String[] args) throws IOException {
         ServerSocket s = new ServerSocket(12345);
+        Sistema sistema = new Sistema();
         while(true){
             Socket socket = s.accept();
-            Sistema sistema = new Sistema();
             new Thread(new TaskRunner(socket, sistema)).start();
         }
     }

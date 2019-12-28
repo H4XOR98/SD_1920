@@ -1,8 +1,5 @@
 
-import Exceptions.FormatoInvalidoException;
-import Exceptions.MusicaInexistenteException;
-import Exceptions.PasswordIncorretaException;
-import Exceptions.UtilizadorInexistenteException;
+import Exceptions.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -23,10 +20,15 @@ public class SistemaRemoto implements SistemaInterface{
 
 
     @Override
-    public int criarConta(String nome, String password, String pathDownload) throws IOException {
-        out.println("criar_conta " + nome + " " + password + " " + pathDownload);
+    public int criarConta(String nome, String password) throws IOException, UtilizadorJaExisteException {
+        out.println("criar_conta " + nome + " " + password);
         out.flush();
-        return Integer.parseInt(in.readLine());
+        String resultado = in.readLine();
+        if(resultado.equals("UtilizadorJaExisteException")){
+            throw new UtilizadorJaExisteException("O nome '"+ nome + "' já está associado a uma conta!");
+        }
+        System.out.println(resultado);
+        return Integer.parseInt(resultado);
     }
 
     @Override
@@ -58,10 +60,13 @@ public class SistemaRemoto implements SistemaInterface{
     }
 
     @Override
-    public List<String> procurarMusica(String etiqueta) throws IOException {
+    public List<String> procurarMusica(String etiqueta) throws EtiquetaInexistenteException, IOException {
         out.println("procura " + etiqueta);
         out.flush();
         String s = in.readLine();
+        if(s.equals("EtiquetaInexistenteException")){
+            throw new EtiquetaInexistenteException("Não existe nenhuma música no sistema com a etiqueta " + etiqueta);
+        }
         String[] componentes = s.split(",");
         List<String> resultado = new ArrayList<>();
         String musica;
@@ -76,8 +81,8 @@ public class SistemaRemoto implements SistemaInterface{
     }
 
     @Override
-    public void downloadMusica(int idMusica) throws MusicaInexistenteException, IOException {
-        out.println("download " + idMusica + " lazaro");
+    public void downloadMusica(int idMusica, String pathDestino) throws MusicaInexistenteException, IOException {
+        out.println("download " + idMusica + " " + pathDestino);
         out.flush();
         String s = in.readLine();
         String[] resultado = s.split(";");
@@ -90,9 +95,15 @@ public class SistemaRemoto implements SistemaInterface{
                 ioe.printStackTrace();
             }
         }else{
-            System.out.println(resultado[0]);
+            if(resultado[0].equals("MusicaInexistenteException"))
+            System.out.println("Não existe nenhuma música com o id selecionado");
         }
     }
 
 
+    public void logoutUtilizador() throws IOException {
+        this.socket.shutdownOutput();
+        this.socket.shutdownInput();
+        this.socket.close();
+    }
 }
