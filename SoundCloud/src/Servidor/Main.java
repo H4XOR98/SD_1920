@@ -1,5 +1,6 @@
+package Servidor;
+
 import Exceptions.FormatoInvalidoException;
-import Servidor.Sistema;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,14 +25,14 @@ public class Main {
 
         Thread[] threads = new Thread[100];
 
-        for(int i = 0 ; i < 5 ; i++){
+        for(int i = 0 ; i < 100 ; i++){
             threads[i] = new Thread(new Teste(s));
         }
-        for(int i = 0; i < 5 ; i++){
+        for(int i = 0; i < 100 ; i++){
             threads[i].start();
         }
 
-        for(int i = 0; i < 5 ; i++){
+        for(int i = 0; i < 100 ; i++){
             threads[i].join();
         }
     }
