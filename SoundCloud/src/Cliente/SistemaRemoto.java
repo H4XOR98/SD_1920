@@ -15,6 +15,7 @@ public class SistemaRemoto implements SistemaInterface {
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
+    private String nome;
 
     public SistemaRemoto() throws IOException {
         this.socket = new Socket("127.0.0.1", 12345);
@@ -45,6 +46,7 @@ public class SistemaRemoto implements SistemaInterface {
         }else if(resultado.equals("PasswordIncorretaException")){
             throw new PasswordIncorretaException("A password inserida está incorreta!");
         }
+        this.nome = nome;
         return resultado;
     }
 
