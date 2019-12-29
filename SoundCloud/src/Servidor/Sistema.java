@@ -23,7 +23,7 @@ public class Sistema {
     private ReentrantLock lockUtilizadores;
     private Condition esperaDownload;
 
-    private static final int MAXDOWN = 67;
+    private static final int MAXDOWN = 3;
 
     public Sistema(){
         this.idUtilizador = 0;
@@ -111,12 +111,9 @@ public class Sistema {
     public String downloadMusica(int idMusica, String pathDestino) throws MusicaInexistenteException, IOException, InterruptedException {
         this.lockMusicas.lock();
         while(this.numDownloads == MAXDOWN){
-            //System.out.println(Thread.currentThread().getId());
             this.esperaDownload.await();
         }
-        //System.out.println(Thread.currentThread().getId());
         this.numDownloads++;
-        System.out.println(numDownloads);
         if(!this.musicas.containsKey(idMusica)){
             this.lockMusicas.unlock();
             throw new MusicaInexistenteException("MusicaInexistenteException");
