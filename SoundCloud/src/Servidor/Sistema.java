@@ -7,27 +7,34 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Function;
 
 public class Sistema {
     private int idUtilizador;
     private int idMusica;
+    private int numDownloads;
+
     private Map<String, Utilizador> utilizadores;//nome,Servidor.Utilizador
     private Map<Integer, Musica> musicas;//idMusica, musica
     private Map<String,List<Integer>> etiquetas;//etiqueta, lista de ids Servidor.Musica
+
     private ReentrantLock lockMusicas;
     private ReentrantLock lockUtilizadores;
+    private Condition esperaDownload;
 
+    private static final int MAXDOWN = 3;
 
     public Sistema(){
         this.idUtilizador = 0;
         this.idMusica = 0;
+        this.numDownloads = 0;
         this.utilizadores = new HashMap<>();
         this.musicas = new HashMap<>();
         this.etiquetas = new HashMap<>();
         this.lockMusicas = new ReentrantLock(true);
         this.lockUtilizadores = new ReentrantLock(true);
+        this.esperaDownload = this.lockMusicas.newCondition();
     }
 
 
@@ -101,8 +108,12 @@ public class Sistema {
     }
 
 
-    public String downloadMusica(int idMusica, String pathDestino) throws MusicaInexistenteException, IOException {
+    public String downloadMusica(int idMusica, String pathDestino) throws MusicaInexistenteException, IOException, InterruptedException {
         this.lockMusicas.lock();
+        while(this.numDownloads == MAXDOWN){
+            System.out.println(Thread.currentThread().getId());
+            this.esperaDownload.await();
+        }
         if(!this.musicas.containsKey(idMusica)){
             this.lockMusicas.unlock();
             throw new MusicaInexistenteException("MusicaInexistenteException");

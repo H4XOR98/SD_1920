@@ -169,7 +169,18 @@ public class Cliente {
                     }
                     break;
                 case 3:
-
+                        View.titulo();
+                        System.out.println("Introduza o id da música que pretende fazer download.");
+                        int id = Input.lerInt();
+                        System.out.println("Introduza a path para onde pretende que o download seja efetuado.");
+                        aux = Input.lerString();
+                        try{
+                            sistemaRemoto.downloadMusica(id,aux);
+                        } catch (MusicaInexistenteException e) {
+                            System.out.println(e.getMessage());
+                        } catch (IOException e) {
+                            System.out.println(e.getMessage());
+                        }
                     break;
                 default:
                     break;

@@ -113,8 +113,9 @@ public class TaskRunner implements Runnable{
                 resultado += m + ",";
             }
             out.println(resultado);
+            System.out.println("Foram procuradas todas as músicas com a etiqueta " + etiqueta);
         } catch (EtiquetaInexistenteException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Não existem músicas com a etiqueta " + etiqueta);
             out.println(e.getMessage());
         }
     }
@@ -126,7 +127,7 @@ public class TaskRunner implements Runnable{
         } catch (MusicaInexistenteException e) {
             out.println(e.getMessage());
         } catch (IOException e) {
-            out.println("ERRO! Impossível realizar download!");
+            out.println("IOException");
         }
     }
 

@@ -92,13 +92,18 @@ public class SistemaRemoto implements SistemaInterface {
             String path = resultado[0];
             byte[] bytesFicheiro = Base64.getDecoder().decode(resultado[1]);
             try (OutputStream fos = new FileOutputStream(path)) {
-                fos.write(bytesFicheiro);
+                if(bytesFicheiro != null) {
+                    fos.write(bytesFicheiro);
+                }
             } catch (IOException ioe) {
-                ioe.printStackTrace();
+                throw new IOException("ERRO! Impossível realizar download!");
             }
         }else{
-            if(resultado[0].equals("MusicaInexistenteException"))
-            System.out.println("Não existe nenhuma música com o id selecionado");
+            if(resultado[0].equals("MusicaInexistenteException")) {
+                throw new MusicaInexistenteException("Não existe nenhuma música com o id selecionado");
+            }else if (resultado[0].equals("IOException")){
+                throw new IOException("ERRO! Impossível realizar download!");
+            }
         }
     }
 
