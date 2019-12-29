@@ -3,6 +3,7 @@ package Servidor;
 import Exceptions.*;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,6 +16,7 @@ public class Sistema {
     private int idMusica;
     private int numDownloads;
 
+    private Map<String, Socket> utilizadoresOnline;
     private Map<String, Utilizador> utilizadores;//nome,Servidor.Utilizador
     private Map<Integer, Musica> musicas;//idMusica, musica
     private Map<String,List<Integer>> etiquetas;//etiqueta, lista de ids Servidor.Musica
@@ -29,6 +31,7 @@ public class Sistema {
         this.idUtilizador = 0;
         this.idMusica = 0;
         this.numDownloads = 0;
+        this.utilizadoresOnline = new HashMap<>();
         this.utilizadores = new HashMap<>();
         this.musicas = new HashMap<>();
         this.etiquetas = new HashMap<>();
@@ -51,7 +54,7 @@ public class Sistema {
         return id;
     }
 
-    public String loginUtilizador(String nome, String password) throws UtilizadorInexistenteException, PasswordIncorretaException{
+    public String loginUtilizador(String nome, String password, Socket socket) throws UtilizadorInexistenteException, PasswordIncorretaException{
         this.lockUtilizadores.lock();
         if(!this.utilizadores.containsKey(nome)){
             this.lockUtilizadores.unlock();
@@ -65,6 +68,9 @@ public class Sistema {
             throw new PasswordIncorretaException("PasswordIncorretaException");
         }
         utilizador.unlock();
+        this.lockUtilizadores.lock();
+        this.utilizadoresOnline.put(nome,socket);
+        this.lockUtilizadores.unlock();
         return nome;
     }
 
@@ -114,6 +120,7 @@ public class Sistema {
             this.esperaDownload.await();
         }
         this.numDownloads++;
+
         if(!this.musicas.containsKey(idMusica)){
             this.lockMusicas.unlock();
             throw new MusicaInexistenteException("MusicaInexistenteException");
@@ -142,5 +149,13 @@ public class Sistema {
         this.esperaDownload.signal();
         this.lockMusicas.unlock();
         return resultado;
+    }
+
+    public void logoutUtilizador(String nome){
+        this.lockUtilizadores.lock();
+        if(this.utilizadoresOnline.containsKey(nome)){
+            this.utilizadoresOnline.remove(nome);
+        }
+        this.lockUtilizadores.unlock();
     }
 }

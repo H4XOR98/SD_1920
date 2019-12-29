@@ -28,11 +28,14 @@ public class TaskRunner implements Runnable{
         try {
             String[] op ;
             String line;
-            while ((line = in.readLine()) != null && !line.equals("quit")) {
+            while ((line = in.readLine()) != null) {
                 // dividir por espaços
                 op = line.split(";");
 
                 this.runCommand(op);
+                if(op[0].equals("logout")){
+                    break;
+                }
                 this.out.flush();
             }
 
@@ -63,6 +66,9 @@ public class TaskRunner implements Runnable{
                 break;
             case "download":
                 this.download(op[1],op[2]);
+                break;
+            case "logout":
+                this.logout(op[1]);
             default:
                 break;
         }
@@ -80,7 +86,7 @@ public class TaskRunner implements Runnable{
 
     private void login(String nome, String password){
         try {
-            out.println(sistema.loginUtilizador(nome, password));
+            out.println(sistema.loginUtilizador(nome, password,this.socket));
             System.out.println("O " + nome + " acabou de iniciar sessão");
         }catch (UtilizadorInexistenteException e){
             System.out.println("O " +  nome + " não existe no sistema");
@@ -133,6 +139,10 @@ public class TaskRunner implements Runnable{
         } catch (InterruptedException e) {
             out.println("InterruptedException");
         }
+    }
+
+    private void logout(String nome) {
+        this.sistema.logoutUtilizador(nome);
     }
 
 }

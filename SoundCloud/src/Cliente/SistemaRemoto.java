@@ -32,7 +32,6 @@ public class SistemaRemoto implements SistemaInterface {
         if(resultado.equals("UtilizadorJaExisteException")){
             throw new UtilizadorJaExisteException("O nome '"+ nome + "' já está associado a uma conta!");
         }
-        System.out.println(resultado);
         return Integer.parseInt(resultado);
     }
 
@@ -119,8 +118,11 @@ public class SistemaRemoto implements SistemaInterface {
 
 
     public void logoutUtilizador() throws IOException {
+        out.println("logout;" + this.nome);
+        out.flush();
         this.socket.shutdownOutput();
         this.socket.shutdownInput();
         this.socket.close();
+        this.in.close();
     }
 }
