@@ -114,7 +114,6 @@ public class Sistema {
             this.esperaDownload.await();
         }
         this.numDownloads++;
-        System.out.println(numDownloads);
         if(!this.musicas.containsKey(idMusica)){
             this.lockMusicas.unlock();
             throw new MusicaInexistenteException("MusicaInexistenteException");
