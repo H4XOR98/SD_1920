@@ -101,7 +101,9 @@ public class SistemaRemoto implements SistemaInterface {
         }else{
             if(resultado[0].equals("MusicaInexistenteException")) {
                 throw new MusicaInexistenteException("Não existe nenhuma música com o id selecionado");
-            }else if (resultado[0].equals("IOException")){
+            }else if (resultado[0].equals("InterruptedException")){
+
+            }else{
                 throw new IOException("ERRO! Impossível realizar download!");
             }
         }

@@ -128,6 +128,8 @@ public class TaskRunner implements Runnable{
             out.println(e.getMessage());
         } catch (IOException e) {
             out.println("IOException");
+        } catch (InterruptedException e) {
+            out.println("InterruptedException");
         }
     }
 
