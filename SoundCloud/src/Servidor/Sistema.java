@@ -137,7 +137,9 @@ public class Sistema {
         resultado += ";" + conteudo;
         musica.unlock();
         this.lockMusicas.lock();
-        this.numDownloads--;
+        if(this.numDownloads > 0) {
+            this.numDownloads--;
+        }
         this.esperaDownload.signal();
         this.lockMusicas.unlock();
         return resultado;

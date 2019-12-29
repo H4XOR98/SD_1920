@@ -25,7 +25,7 @@ public class SistemaRemoto implements SistemaInterface {
 
     @Override
     public int criarConta(String nome, String password) throws IOException, UtilizadorJaExisteException {
-        out.println("criar_conta " + nome + " " + password);
+        out.println("criar_conta;" + nome + ";" + password);
         out.flush();
         String resultado = in.readLine();
         if(resultado.equals("UtilizadorJaExisteException")){
@@ -37,7 +37,7 @@ public class SistemaRemoto implements SistemaInterface {
 
     @Override
     public String loginUtilizador(String nome, String password) throws UtilizadorInexistenteException, PasswordIncorretaException, IOException {
-        out.println("login " + nome + " " + password);
+        out.println("login;" + nome + ";" + password);
         out.flush();
         String resultado = in.readLine();
         if(resultado.equals("UtilizadorInexistenteException")){
@@ -55,7 +55,7 @@ public class SistemaRemoto implements SistemaInterface {
             etiqueta += e + "_";
         }
         String bytes = Base64.getEncoder().encodeToString(bytesFicheiro);
-        out.println("upload " + titulo + " " + interprete + " " + ano + " " + etiqueta + " " + bytes + " " + formato);
+        out.println("upload;" + titulo + ";" + interprete + ";" + ano + ";" + etiqueta + ";" + bytes + ";" + formato);
         out.flush();
         String resultado = in.readLine();
         if(resultado.equals("FormatoInvalidoException")){
@@ -65,7 +65,7 @@ public class SistemaRemoto implements SistemaInterface {
 
     @Override
     public List<String> procurarMusica(String etiqueta) throws EtiquetaInexistenteException, IOException {
-        out.println("procura " + etiqueta);
+        out.println("procura;" + etiqueta);
         out.flush();
         String s = in.readLine();
         if(s.equals("EtiquetaInexistenteException")){
@@ -86,7 +86,7 @@ public class SistemaRemoto implements SistemaInterface {
 
     @Override
     public String downloadMusica(int idMusica, String pathDestino) throws MusicaInexistenteException, IOException {
-        out.println("download " + idMusica + " " + pathDestino);
+        out.println("download;" + idMusica + ";" + pathDestino);
         out.flush();
         String s = in.readLine();
         String[] resultado = s.split(";");

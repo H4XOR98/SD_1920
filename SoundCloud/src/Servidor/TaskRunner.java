@@ -30,7 +30,7 @@ public class TaskRunner implements Runnable{
             String line;
             while ((line = in.readLine()) != null && !line.equals("quit")) {
                 // dividir por espaços
-                op = line.split(" ");
+                op = line.split(";");
 
                 this.runCommand(op);
                 this.out.flush();
@@ -125,7 +125,7 @@ public class TaskRunner implements Runnable{
             int idMusica = Integer.parseInt(id);
             String nomeMusica = this.sistema.downloadMusica(idMusica,pathDestino);
             out.println(nomeMusica);
-            System.out.println("Foi efetuado um download de " + nomeMusica);
+            System.out.println("Foi efetuado um download.");
         } catch (MusicaInexistenteException e) {
             out.println(e.getMessage());
         } catch (IOException e) {
