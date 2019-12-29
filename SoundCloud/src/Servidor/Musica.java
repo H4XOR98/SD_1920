@@ -134,8 +134,7 @@ public class Musica {
         for(String etiqueta : this.etiquetas){
             sb.append("\t-" + etiqueta + "");
         }
-        sb.append(";Path: "+this.path + ";");
-        sb.append("Nº de Downloads: " + this.numDownloads);
+        sb.append(";Nº de Downloads: " + this.numDownloads);
         return sb.toString();
     }
 

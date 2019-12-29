@@ -14,5 +14,5 @@ public interface SistemaInterface {
 
     public List<String> procurarMusica(String etiqueta) throws IOException, EtiquetaInexistenteException;
 
-    public void downloadMusica(int idMusica, String pathDestino) throws MusicaInexistenteException, IOException;
+    public String downloadMusica(int idMusica, String pathDestino) throws MusicaInexistenteException, IOException;
 }

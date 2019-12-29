@@ -123,7 +123,9 @@ public class TaskRunner implements Runnable{
     private void download(String id, String pathDestino) {
         try{
             int idMusica = Integer.parseInt(id);
-            out.println(this.sistema.downloadMusica(idMusica,pathDestino));
+            String nomeMusica = this.sistema.downloadMusica(idMusica,pathDestino);
+            out.println(nomeMusica);
+            System.out.println("Foi efetuado um download de " + nomeMusica);
         } catch (MusicaInexistenteException e) {
             out.println(e.getMessage());
         } catch (IOException e) {

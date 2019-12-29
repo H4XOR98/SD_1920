@@ -5,6 +5,8 @@ import Exceptions.*;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -83,13 +85,16 @@ public class SistemaRemoto implements SistemaInterface {
     }
 
     @Override
-    public void downloadMusica(int idMusica, String pathDestino) throws MusicaInexistenteException, IOException {
+    public String downloadMusica(int idMusica, String pathDestino) throws MusicaInexistenteException, IOException {
         out.println("download " + idMusica + " " + pathDestino);
         out.flush();
         String s = in.readLine();
         String[] resultado = s.split(";");
+        String nomeMusica = "";
         if(resultado.length == 2){
             String path = resultado[0];
+            Path p = Paths.get(path);
+            nomeMusica = p.getFileName().toString();
             byte[] bytesFicheiro = Base64.getDecoder().decode(resultado[1]);
             try (OutputStream fos = new FileOutputStream(path)) {
                 if(bytesFicheiro != null) {
@@ -107,6 +112,7 @@ public class SistemaRemoto implements SistemaInterface {
                 throw new IOException("ERRO! Impossível realizar download!");
             }
         }
+        return nomeMusica;
     }
 
 

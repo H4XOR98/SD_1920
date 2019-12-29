@@ -154,7 +154,7 @@ public class Cliente {
                                      }
                                      listagem.show(pagina);
                                      break;
-                                 case 0: System.out.println("\n\nTotal produtos nunca comprados: " + etiquetas.size() + " produtos.\n\n\n");
+                                 case 0:
                                      listagem.show();
                                      break;
                                  default:
@@ -175,7 +175,8 @@ public class Cliente {
                         System.out.println("Introduza a path para onde pretende que o download seja efetuado.");
                         aux = Input.lerString();
                         try{
-                            sistemaRemoto.downloadMusica(id,aux);
+                            String nomeMusica = sistemaRemoto.downloadMusica(id,aux);
+                            System.out.println("Download da música " + nomeMusica + " efetuado com sucesso.");
                         } catch (MusicaInexistenteException e) {
                             System.out.println(e.getMessage());
                         } catch (IOException e) {
@@ -187,66 +188,4 @@ public class Cliente {
             }
         }while(op != 0);
     }
-    /*public static void main(String[] args) {
-        Cliente.SistemaRemoto sistemaRemoto;
-        try{
-            sistemaRemoto = new Cliente.SistemaRemoto();
-
-            Scanner sc = new Scanner(System.in);
-            System.out.println("------ CRIAR CONTA -----");
-            System.out.println("Introduza o seu nome! ");
-            String nome = sc.nextLine();
-            System.out.println("Introduza a password! ");
-            String password  = sc.nextLine();
-            System.out.println("O seu id é o " + sistemaRemoto.criarConta(nome,password,"/Users/lazaropinheiro/Desktop/"));
-            System.out.println("Introduza o seu nome! ");
-            nome = sc.nextLine();
-            System.out.println("Introduza a password! ");
-            password  = sc.nextLine();
-            sistemaRemoto.loginUtilizador(nome,password);
-
-
-            List<String> etiquetas = new ArrayList<>();
-            etiquetas.add("Trance");
-            etiquetas.add("EDM");
-            String p = "/Users/lazaropinheiro/Downloads/kygo.mp3";
-            Path path = Paths.get(p);
-            byte[] bytes = Files.readAllBytes(path);
-            sistemaRemoto.uploadMusica("Firestone","Kygo",2016,etiquetas,bytes,"mp3");
-            //
-            etiquetas = new ArrayList<>();
-            etiquetas.add("EDM");
-            p = "/Users/lazaropinheiro/Downloads/Bocejo_SONY_g.mp4";
-            path = Paths.get(p);
-            bytes = Files.readAllBytes(path);
-            sistemaRemoto.uploadMusica("Bocejo","SONY",2016,etiquetas,bytes,"mp4");
-            //
-            etiquetas = new ArrayList<>();
-            etiquetas.add("Kuduro");
-            etiquetas.add("Gospel");
-            etiquetas.add("EDM");
-            p = "/Users/lazaropinheiro/Downloads/carlos_t.mp3";
-            path = Paths.get(p);
-            bytes = Files.readAllBytes(path);
-            sistemaRemoto.uploadMusica("Carlos","t",2016,etiquetas,bytes,"mp3");
-            //
-
-            List<String> musicas = sistemaRemoto.procurarMusica("EDM");
-            for(String m : musicas){
-                System.out.println(m);
-            }
-            sistemaRemoto.downloadMusica(1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }catch (FormatoInvalidoException e) {
-            e.printStackTrace();
-        } catch (UtilizadorInexistenteException e) {
-            e.printStackTrace();
-        } catch (PasswordIncorretaException e) {
-            e.printStackTrace();
-        } catch (MusicaInexistenteException e) {
-            e.printStackTrace();
-        }
-    }
-     */
 }

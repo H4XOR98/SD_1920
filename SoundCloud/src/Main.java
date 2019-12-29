@@ -1,12 +1,10 @@
-package Servidor;
-
 import Exceptions.FormatoInvalidoException;
+import Servidor.Sistema;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException, FormatoInvalidoException, InterruptedException {
@@ -25,14 +23,14 @@ public class Main {
 
         Thread[] threads = new Thread[100];
 
-        for(int i = 0 ; i < 100 ; i++){
+        for(int i = 0 ; i < 5 ; i++){
             threads[i] = new Thread(new Teste(s));
         }
-        for(int i = 0; i < 100 ; i++){
+        for(int i = 0; i < 5 ; i++){
             threads[i].start();
         }
 
-        for(int i = 0; i < 100 ; i++){
+        for(int i = 0; i < 5 ; i++){
             threads[i].join();
         }
     }
