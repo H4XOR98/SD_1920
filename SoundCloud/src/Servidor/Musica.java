@@ -10,6 +10,7 @@ public class Musica {
     private int id;
     private String titulo;
     private String interprete;
+    private String autor;
     private int ano;
     private List<String> etiquetas;
     private String path;
@@ -24,6 +25,7 @@ public class Musica {
         this.id = -1;
         this.titulo = "n/a";
         this.interprete = "n/a";;
+        this.autor = "n/a";
         this.ano = 0;
         this.etiquetas = new ArrayList<>();
         this.path = "n/a";
@@ -32,10 +34,11 @@ public class Musica {
         this.lockMusica = new ReentrantLock(true);
     }
 
-    public Musica(int id, String titulo, String interprete, int ano, byte[] bytesFicheiro, List<String> etiquetas, String formato) {
+    public Musica(int id, String titulo, String interprete, String autor, int ano, byte[] bytesFicheiro, List<String> etiquetas, String formato) {
         this.id = id;
         this.titulo = titulo;
         this.interprete = interprete;
+        this.autor = autor;
         this.ano = ano;
         this.setEtiquetas(etiquetas);
         this.path = this.pathDest + titulo + "_" + interprete + "." + formato;
@@ -49,6 +52,7 @@ public class Musica {
         this.id = musica.getId();
         this.titulo = musica.getTitulo();
         this.interprete = musica.getInterprete();
+        this.autor = musica.getAutor();
         this.ano = musica.getAno();
         this.etiquetas = musica.getEtiquetas();
         this.path = musica.getPath();
@@ -58,23 +62,27 @@ public class Musica {
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public String getTitulo() {
-        return titulo;
+        return this.titulo;
     }
 
     public String getInterprete() {
-        return interprete;
+        return this.interprete;
+    }
+
+    public String getAutor(){
+        return this.autor;
     }
 
     public int getAno() {
-        return ano;
+        return this.ano;
     }
 
     public List<String> getEtiquetas() {
-        return etiquetas;
+        return this.etiquetas;
     }
 
     public String getPath() {
@@ -111,14 +119,20 @@ public class Musica {
         return id == musica.getId();
     }
 
+
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 31 * hash + (int) id;
+        hash = 31 * hash + (int) this.id;
         hash = 31 * hash + (this.titulo == null ? 0 : this.titulo.hashCode());
         hash = 31 * hash + (this.interprete == null ? 0 : this.interprete.hashCode());
-        hash = 31 * hash + (int) ano;
-        hash = this.etiquetas.hashCode();
+        hash = 31 * hash + (this.autor == null ? 0 : this.autor.hashCode());
+        hash = 31 * hash + (int) this.ano;
+        hash = 31 * hash + (this.etiquetas == null ? 0 : this.etiquetas.hashCode());
+        hash = 31 * hash + (this.path == null ? 0 : this.path.hashCode());
+        hash = 31 * hash + (this.formato == null ? 0 : this.formato.hashCode());
+        hash = 31 * hash + (int) this.numDownloads;
+        hash = 31 * hash + (this.lockMusica == null ? 0 : this.lockMusica.hashCode());
         return hash;
     }
 

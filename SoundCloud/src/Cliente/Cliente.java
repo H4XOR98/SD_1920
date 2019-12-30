@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cliente {
+
+
     public static void main(String[] args) {
         SistemaRemoto sistemaRemoto;
         try{
@@ -50,14 +52,15 @@ public class Cliente {
                        } catch (UtilizadorJaExisteException e) {
                            View.viewErro(e.getMessage());
                        }
+                       op = 0;
                        break;
                    case 0:
                        try {
-                           sistemaRemoto.logoutUtilizador();
-                           System.out.println("Até Breve!");
+                           sistemaRemoto.sair();
                        } catch (IOException e) {
                            View.viewErro("Erro ao terminar sessão");
                        }
+                       System.out.println("Até Breve!");
                        System.exit(0);
                        break;
                    default:
@@ -84,6 +87,9 @@ public class Cliente {
             View.menuLogado();
             op = Input.lerInt();
             switch (op){
+                case 0:
+                    sistemaRemoto.logoutUtilizador();
+                    break;
                 case 1:
                     View.titulo();
                     System.out.println("Introduza o titulo");
@@ -184,6 +190,7 @@ public class Cliente {
                         }
                     break;
                 default:
+                    View.viewErro("       Opção inválida!       ");
                     break;
             }
         }while(op != 0);

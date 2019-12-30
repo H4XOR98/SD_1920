@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Base64;
 import java.util.List;
+import java.util.function.Function;
 
 public class TaskRunner implements Runnable{
     private Socket socket;
@@ -28,14 +29,11 @@ public class TaskRunner implements Runnable{
         try {
             String[] op ;
             String line;
-            while ((line = in.readLine()) != null) {
+            while ((line = in.readLine()) != null && !line.equals("quit")) {
                 // dividir por espaços
                 op = line.split(";");
 
                 this.runCommand(op);
-                if(op[0].equals("logout")){
-                    break;
-                }
                 this.out.flush();
             }
 
@@ -44,6 +42,7 @@ public class TaskRunner implements Runnable{
             this.socket.close();
             this.in.close();
             this.out.close();
+            System.out.println("O socket foi fechado");
         }
         catch (IOException e){
             e.printStackTrace();
@@ -59,7 +58,7 @@ public class TaskRunner implements Runnable{
                 this.login(op[1], op[2]);
                 break;
             case "upload":
-                this.upload(op[1], op[2], op[3], op[4], op[5], op[6]);
+                this.upload(op[1], op[2], op[3], op[4], op[5], op[6], op[7]);
                 break;
             case "procura":
                 this.procura(op[1]);
@@ -97,12 +96,12 @@ public class TaskRunner implements Runnable{
         }
     }
 
-    private void upload(String titulo, String interprete, String conteudoAno, String conteudoEtiquetas, String conteudoFicheiro, String formato){
+    private void upload(String titulo, String interprete, String autor, String conteudoAno, String conteudoEtiquetas, String conteudoFicheiro, String formato){
         try {
             int ano = Integer.parseInt(conteudoAno);
             String[] etiquetas = conteudoEtiquetas.split("_");
             byte[] bytesFicheiro = Base64.getDecoder().decode(conteudoFicheiro);
-            sistema.uploadMusica(titulo,interprete,ano,etiquetas,bytesFicheiro,formato);
+            sistema.uploadMusica(titulo,interprete,autor,ano,etiquetas,bytesFicheiro,formato);
             out.println("sucesso");
             System.out.println("Foi adicionada a musica " + titulo + "_" + interprete + "." + formato);
         } catch (FormatoInvalidoException e) {
@@ -143,6 +142,12 @@ public class TaskRunner implements Runnable{
 
     private void logout(String nome) {
         this.sistema.logoutUtilizador(nome);
+        System.out.println("O " + nome + " terminou sessão");
     }
 
+
+    private void notifica(Notificacao notificacao){
+        out.println(notificacao.toString());
+        out.flush();
+    }
 }

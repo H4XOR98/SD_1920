@@ -117,8 +117,14 @@ public class SistemaRemoto implements SistemaInterface {
     }
 
 
-    public void logoutUtilizador() throws IOException {
+    public void logoutUtilizador() {
         out.println("logout;" + this.nome);
+        out.flush();
+    }
+
+
+    public void sair() throws IOException {
+        out.println("quit");
         out.flush();
         this.socket.shutdownOutput();
         this.socket.shutdownInput();

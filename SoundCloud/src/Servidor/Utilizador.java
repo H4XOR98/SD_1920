@@ -6,7 +6,6 @@ public class Utilizador  {
     private int id;
     private String nome;
     private String password;
-    private String pathDownload;
     private ReentrantLock lockUtilizador;
 
     public Utilizador(){
