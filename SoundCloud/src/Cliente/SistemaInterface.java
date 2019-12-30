@@ -10,7 +10,7 @@ public interface SistemaInterface {
 
     public String loginUtilizador(String nome, String password) throws UtilizadorInexistenteException, PasswordIncorretaException, IOException;
 
-    public void uploadMusica(String titulo, String interprete, int ano, List<String> etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException, IOException;
+    public void uploadMusica(String titulo, String interprete, String autor, int ano, List<String> etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException, IOException;
 
     public List<String> procurarMusica(String etiqueta) throws IOException, EtiquetaInexistenteException;
 

@@ -50,13 +50,13 @@ public class SistemaRemoto implements SistemaInterface {
     }
 
     @Override
-    public void uploadMusica(String titulo, String interprete, int ano, List<String> etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException, IOException {
+    public void uploadMusica(String titulo, String interprete, String autor, int ano, List<String> etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException, IOException {
         String etiqueta = "";
         for (String e : etiquetas){
             etiqueta += e + "_";
         }
         String bytes = Base64.getEncoder().encodeToString(bytesFicheiro);
-        out.println("upload;" + titulo + ";" + interprete + ";" + ano + ";" + etiqueta + ";" + bytes + ";" + formato);
+        out.println("upload;" + titulo + ";" + interprete + ";" + autor + ";" + ano + ";" + etiqueta + ";" + bytes + ";" + formato);
         out.flush();
         String resultado = in.readLine();
         if(resultado.equals("FormatoInvalidoException")){

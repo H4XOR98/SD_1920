@@ -78,7 +78,7 @@ public class Cliente {
     private static void logado(SistemaRemoto sistemaRemoto){
         int op = -1;
         int op1 = -1, opcao;
-        String titulo, interprete, formato, etiqueta;
+        String titulo, interprete, formato, etiqueta,autor;
         int ano;
         List<String> etiquetas;
         byte[] bytesFicheiro;
@@ -96,6 +96,8 @@ public class Cliente {
                     titulo = Input.lerString();
                     System.out.println("Introduza o interprete");
                     interprete = Input.lerString();
+                    System.out.println("Introduza o autor");
+                    autor = Input.lerString();
                     System.out.println("Introduza o ano");
                     ano = Input.lerInt();
                     etiquetas = new ArrayList<>();
@@ -116,7 +118,7 @@ public class Cliente {
                         String nomeFicheiro = path.getFileName().toString();
                         String[] partes = nomeFicheiro.split("_");
                         formato = partes[partes.length - 1].substring(partes[partes.length - 1].lastIndexOf(".") + 1);
-                        sistemaRemoto.uploadMusica(titulo, interprete, ano, etiquetas, bytesFicheiro, formato);
+                        sistemaRemoto.uploadMusica(titulo, interprete, autor, ano, etiquetas, bytesFicheiro, formato);
                         System.out.println("Upload realizado com sucesso");
                     } catch (FormatoInvalidoException e) {
                         View.viewErro(e.getMessage());
