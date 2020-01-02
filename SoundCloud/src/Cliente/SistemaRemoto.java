@@ -1,6 +1,5 @@
 package Cliente;
 
-import Cliente.SistemaInterface;
 import Exceptions.*;
 
 import java.io.*;
@@ -102,15 +101,15 @@ public class SistemaRemoto implements SistemaInterface {
                     fos.write(bytesFicheiro);
                 }
             } catch (IOException ioe) {
-                throw new IOException("ERRO! Impossível realizar download!");
+                throw new IOException("Impossível realizar download!");
             }
         }else{
             if(resultado[0].equals("MusicaInexistenteException")) {
                 throw new MusicaInexistenteException("Não existe nenhuma música com o id selecionado");
             }else if (resultado[0].equals("InterruptedException")){
-
+                throw new IOException("Impossível realizar download!");
             }else{
-                throw new IOException("ERRO! Impossível realizar download!");
+                throw new IOException("Impossível realizar download!");
             }
         }
         return nomeMusica;

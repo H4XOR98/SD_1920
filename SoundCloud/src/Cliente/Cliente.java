@@ -16,16 +16,19 @@ public class Cliente {
 
     public static void main(String[] args) {
         SistemaRemoto sistemaRemoto;
+        ViewException viewException = new ViewException();
         try{
             String nome, password;
             sistemaRemoto = new SistemaRemoto();
             int op;
+            Titulo titulo = new Titulo();
+            MenuInicial menuInicial = new MenuInicial(titulo);
             do{
-                View.menuInical();
+                menuInicial.showMenuInical();
                 op = Input.lerInt();
                 switch (op){
                    case 1:
-                       View.titulo();
+                       titulo.showtitulo();
                        System.out.println("Introduza o seu nome:");
                        nome = Input.lerString();
                        System.out.println("Introduza a sua password:");
@@ -33,15 +36,15 @@ public class Cliente {
                        try {
                            nome = sistemaRemoto.loginUtilizador(nome, password);
                            System.out.println("Bem vindo, " + nome);
-                           logado(sistemaRemoto);
+                           logado(sistemaRemoto,titulo,viewException);
                        } catch (UtilizadorInexistenteException e) {
-                           View.viewErro(e.getMessage());
+                           viewException.showViewException(e.getMessage());
                        } catch (PasswordIncorretaException e) {
-                           View.viewErro(e.getMessage());
+                           viewException.showViewException(e.getMessage());
                        }
                        break;
                    case 2:
-                       View.titulo();
+                       titulo.showtitulo();
                        System.out.println("Introduza o seu nome:");
                        nome = Input.lerString();
                        System.out.println("Introduza uma password:");
@@ -50,7 +53,7 @@ public class Cliente {
                            int id = sistemaRemoto.criarConta(nome, password);
                            System.out.println("O id da sua conta é o " + id + ".");
                        } catch (UtilizadorJaExisteException e) {
-                           View.viewErro(e.getMessage());
+                           viewException.showViewException(e.getMessage());
                        }
                        op = 0;
                        break;
@@ -58,24 +61,24 @@ public class Cliente {
                        try {
                            sistemaRemoto.sair();
                        } catch (IOException e) {
-                           View.viewErro("Erro ao terminar sessão");
+                           viewException.showViewException("Erro ao terminar sessão");
                        }
                        System.out.println("Até Breve!");
                        System.exit(0);
                        break;
                    default:
-                       View.viewErro("       Opção inválida!       ");
+                       viewException.showViewException("       Opção inválida!       ");
                        break;
                }
 
            }while(true);
         } catch (IOException e) {
-            View.viewErro("Algo de errado aconteceu com a ligação ao servidor");
+            viewException.showViewException("Algo de errado aconteceu com a ligação ao servidor");
         }
     }
 
 
-    private static void logado(SistemaRemoto sistemaRemoto){
+    private static void logado(SistemaRemoto sistemaRemoto,Titulo title, ViewException viewException){
         int op = -1;
         int op1 = -1, opcao;
         String titulo, interprete, formato, etiqueta,autor;
@@ -83,15 +86,16 @@ public class Cliente {
         List<String> etiquetas;
         byte[] bytesFicheiro;
         String aux;
+        MenuLogin menuLogin = new MenuLogin(title);
         do{
-            View.menuLogado();
+            menuLogin.showMenuLogado();
             op = Input.lerInt();
             switch (op){
                 case 0:
                     sistemaRemoto.logoutUtilizador();
                     break;
                 case 1:
-                    View.titulo();
+                    title.showtitulo();
                     System.out.println("Introduza o titulo");
                     titulo = Input.lerString();
                     System.out.println("Introduza o interprete");
@@ -101,8 +105,9 @@ public class Cliente {
                     System.out.println("Introduza o ano");
                     ano = Input.lerInt();
                     etiquetas = new ArrayList<>();
+                    MenuEtiquetas menuEtiquetas = new MenuEtiquetas();
                     do{
-                        View.menuEtiquetas();
+                        menuEtiquetas.showmenuEtiquetas();
                         op1 = Input.lerInt();
                         if(op1 != 0) {
                             System.out.println("Introduza etiqueta:");
@@ -121,13 +126,13 @@ public class Cliente {
                         sistemaRemoto.uploadMusica(titulo, interprete, autor, ano, etiquetas, bytesFicheiro, formato);
                         System.out.println("Upload realizado com sucesso");
                     } catch (FormatoInvalidoException e) {
-                        View.viewErro(e.getMessage());
+                        viewException.showViewException(e.getMessage());
                     } catch (IOException e) {
-                        View.viewErro("Impossível carregar ficheiro");
+                        viewException.showViewException("Impossível carregar ficheiro");
                     }
                     break;
                 case 2:
-                    View.titulo();
+                    title.showtitulo();
                     System.out.println("Introduza uma etiqueta");
                     etiqueta = Input.lerString();
                     try {
@@ -137,7 +142,7 @@ public class Cliente {
                          int paginaOP = 0;
                          ListagemLista listagem = new ListagemLista("Lista de Músicas",etiquetas);
                          do {
-                             listagem.show(op1);
+                             listagem.show(opcao);
                              opcao = Input.lerInt();
                              switch (opcao){
                                  case 1:
@@ -156,7 +161,7 @@ public class Cliente {
                                      listagem.show();
                                      paginaOP = Input.lerInt();
                                      if(paginaOP < 0 || paginaOP > elem){
-                                         View.viewErro("Opção Inválida!");
+                                         viewException.showViewException("Opção Inválida!");
                                      }else{
                                          pagina = paginaOP-1;
                                      }
@@ -166,18 +171,18 @@ public class Cliente {
                                      listagem.show();
                                      break;
                                  default:
-                                     View.viewErro("Opção Inválida!");
+                                     viewException.showViewException("Opção Inválida!");
                                      break;
                              }
                          }while(opcao !=0);
                     } catch (EtiquetaInexistenteException e) {
-                        View.viewErro(e.getMessage());
+                        viewException.showViewException(e.getMessage());
                     } catch (IOException e) {
-                        View.viewErro(e.getMessage());
+                        viewException.showViewException(e.getMessage());
                     }
                     break;
                 case 3:
-                        View.titulo();
+                        title.showtitulo();
                         System.out.println("Introduza o id da música que pretende fazer download.");
                         int id = Input.lerInt();
                         System.out.println("Introduza a path para onde pretende que o download seja efetuado.");
@@ -192,7 +197,7 @@ public class Cliente {
                         }
                     break;
                 default:
-                    View.viewErro("       Opção inválida!       ");
+                    viewException.showViewException("       Opção inválida!       ");
                     break;
             }
         }while(op != 0);
