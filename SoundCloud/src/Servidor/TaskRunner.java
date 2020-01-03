@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
-import java.util.function.Function;
 
 public class TaskRunner implements Runnable{
     private Socket socket;
@@ -101,7 +101,7 @@ public class TaskRunner implements Runnable{
             int ano = Integer.parseInt(conteudoAno);
             String[] etiquetas = conteudoEtiquetas.split("_");
             byte[] bytesFicheiro = Base64.getDecoder().decode(conteudoFicheiro);
-            sistema.uploadMusica(titulo,interprete,autor,ano,etiquetas,bytesFicheiro,formato);
+            sistema.uploadMusica(titulo,interprete,autor,ano, Arrays.asList(etiquetas),bytesFicheiro,formato);
             out.println("sucesso");
             System.out.println("Foi adicionada a musica " + titulo + "_" + interprete + "." + formato);
         } catch (FormatoInvalidoException e) {

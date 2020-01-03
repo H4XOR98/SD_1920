@@ -75,13 +75,13 @@ public class Sistema {
     }
 
 
-    public void uploadMusica(String titulo, String interprete,String autor, int ano, String[] etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException {
+    public void uploadMusica(String titulo, String interprete,String autor, int ano, List<String> etiquetas, byte[] bytesFicheiro, String formato) throws FormatoInvalidoException {
         this.lockMusicas.lock();
         if (!FormatosMusicaEnum.validaFormato(formato)) {
             this.lockMusicas.unlock();
             throw new FormatoInvalidoException("FormatoInvalidoException");
         }
-        Musica musica = new Musica(this.idMusica++, titulo, interprete, autor, ano, bytesFicheiro, Arrays.asList(etiquetas), formato);
+        Musica musica = new Musica(this.idMusica++, titulo, interprete, autor, ano, bytesFicheiro, etiquetas, formato);
         int id = musica.getId();
         musicas.put(id, musica);
         for (String etiqueta : etiquetas) {
