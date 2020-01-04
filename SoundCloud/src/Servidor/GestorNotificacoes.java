@@ -27,8 +27,13 @@ public class GestorNotificacoes {
     public List<String> getNotificacoesUtilizador(String nome){
         List<String> resultado = new ArrayList<>();
         this.lockNotificacoes.lock();
-        for(Notificacao notificacao : this.notificacoes.get(nome)){
-            resultado.add("notificacao;" + notificacao.toString());
+        List<Notificacao> listaNotificacoes = this.notificacoes.get(nome);
+        if(listaNotificacoes != null) {
+            for (Notificacao notificacao : listaNotificacoes) {
+                resultado.add("notificacao;" + notificacao.toString());
+            }
+            listaNotificacoes.clear();
+            this.notificacoes.remove(nome);
         }
         this.lockNotificacoes.unlock();
         return resultado;

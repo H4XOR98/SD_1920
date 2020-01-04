@@ -1,8 +1,8 @@
 package Cliente;
 
 import Exceptions.*;
+import Input.Input;
 import View.*;
-import Input.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -86,7 +86,7 @@ public class Cliente {
     }
 
 
-    private static void logado(SistemaRemoto sistemaRemoto,Titulo title, ViewException viewException){
+    private static void logado(SistemaRemoto sistemaRemoto, Titulo title, ViewException viewException){
         int op = -1;
         int op1 = -1, opcao;
         String titulo, interprete, formato, etiqueta,autor;

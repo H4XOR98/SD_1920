@@ -177,7 +177,12 @@ public class SistemaRemoto implements SistemaInterface {
     private boolean processaNotificacao(String s){
         String[] list = s.split(";");
         if(list[0].equals("notificacao")){
-            viewNotificacao.showNotificacao(list[1]);
+            String notificacao = "";
+            String[] resultado = list[1].split(",");
+            for(String n : resultado){
+                notificacao += n + "\n";
+            }
+            viewNotificacao.showNotificacao(notificacao);
             return true;
         }
         return false;

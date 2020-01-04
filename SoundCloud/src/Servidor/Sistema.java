@@ -17,9 +17,9 @@ public class Sistema {
     private int numDownloads;
 
     private Map<String, PrintWriter> utilizadoresOnline;
-    private Map<String, Utilizador> utilizadores;//nome,Servidor.Utilizador
+    private Map<String, Utilizador> utilizadores;//nome,Utilizador
     private Map<Integer, Musica> musicas;//idMusica, musica
-    private Map<String,List<Integer>> etiquetas;//etiqueta, lista de ids Servidor.Musica
+    private Map<String,List<Integer>> etiquetas;//etiqueta, lista de ids Musica
     private GestorNotificacoes gestorNotificacoes;
 
     private ReentrantLock lockMusicas;
@@ -58,7 +58,7 @@ public class Sistema {
         return id;
     }
 
-    public String loginUtilizador(String nome, String password, PrintWriter out) throws UtilizadorInexistenteException, PasswordIncorretaException{
+    public String loginUtilizador(String nome, String password, PrintWriter out) throws UtilizadorInexistenteException, PasswordIncorretaException {
         this.lockUtilizadores.lock();
         if(!this.utilizadores.containsKey(nome)){
             this.lockUtilizadores.unlock();
@@ -97,7 +97,7 @@ public class Sistema {
     }
 
 
-    public List<String> procurarMusica(String etiqueta) throws EtiquetaInexistenteException{
+    public List<String> procurarMusica(String etiqueta) throws EtiquetaInexistenteException {
         List<String> resultado = new ArrayList<>();
         Musica musica;
         this.lockMusicas.lock();

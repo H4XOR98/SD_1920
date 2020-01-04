@@ -1,6 +1,5 @@
 package Servidor;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -16,16 +15,20 @@ public class ThreadEnvioNotificacoes implements Runnable {
     @Override
     public void run() {
         PrintWriter out;
-        List<UtilizadorOnline> utilizadoresOnline = this.sistema.getUtilizadoresOnline();
-        for(UtilizadorOnline utilizadorOnline : utilizadoresOnline){
-            List<String> notificacoes = this.gestorNotificacoes.getNotificacoesUtilizador(utilizadorOnline.getNome());
-            for(String notificacao : notificacoes){
-                for(UtilizadorOnline u : utilizadoresOnline){
-                    if(!utilizadorOnline.getNome().equals(u.getNome())){
-                        out = u.getPrintWriter();
-                        out.println(notificacao);
-                        if(out.checkError() == false) {
-                            out.flush();
+        while(true){
+            List<UtilizadorOnline> utilizadoresOnline = this.sistema.getUtilizadoresOnline();
+            for(UtilizadorOnline utilizadorOnline : utilizadoresOnline){
+                List<String> notificacoes = this.gestorNotificacoes.getNotificacoesUtilizador(utilizadorOnline.getNome());
+                if(notificacoes != null){
+                    for(String notificacao : notificacoes){
+                        for(UtilizadorOnline u : utilizadoresOnline){
+                            if(!utilizadorOnline.getNome().equals(u.getNome())){
+                                out = u.getPrintWriter();
+                                out.println(notificacao);
+                                if(out.checkError() == false) {
+                                    out.flush();
+                                }
+                            }
                         }
                     }
                 }
@@ -33,3 +36,4 @@ public class ThreadEnvioNotificacoes implements Runnable {
         }
     }
 }
+
