@@ -167,14 +167,8 @@ public class Musica {
     }
 
    public void efetuarDownload(){
-        this.numDownloads++;
-   }
-
-   public void lock(){
         this.lockMusica.lock();
-   }
-
-   public void unlock(){
+        this.numDownloads++;
         this.lockMusica.unlock();
    }
 }

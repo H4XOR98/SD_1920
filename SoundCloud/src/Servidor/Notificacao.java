@@ -11,9 +11,9 @@ public class Notificacao {
         this.autor = "n/a";
     }
 
-    public Notificacao(String titulo, String interprete){
+    public Notificacao(String titulo, String autor){
         this.titulo = titulo;
-        this.autor = interprete;
+        this.autor = autor;
     }
 
     public Notificacao(Notificacao notificacao){
@@ -32,9 +32,9 @@ public class Notificacao {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("--------- NOTIFICACAO ---------;");
-        sb.append("Título: " + this.titulo + ";");
-        sb.append("Autor: " + this.autor + ";");
+        sb.append("--------- NOTIFICACAO ---------,");
+        sb.append("Título: " + this.titulo + ",");
+        sb.append("Autor: " + this.autor + ",");
         return sb.toString();
     }
 }

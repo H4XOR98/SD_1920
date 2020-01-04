@@ -6,27 +6,23 @@ public class Utilizador  {
     private int id;
     private String nome;
     private String password;
-    private ReentrantLock lockUtilizador;
 
     public Utilizador(){
         this.id = -1;
         this.nome = "n/a";
         this.password = "n/a";
-        this.lockUtilizador = new ReentrantLock(true);
     }
 
     public Utilizador(int id, String nome, String password) {
         this.id = id;
         this.nome = nome;
         this.password = password;
-        this.lockUtilizador = new ReentrantLock(true);
     }
 
     public Utilizador(Utilizador utilizador){
         this.id = utilizador.getId();
         this.nome = utilizador.getNome();
         this.password = utilizador.getPassword();
-        this.lockUtilizador = new ReentrantLock(true);
     }
 
 
@@ -81,13 +77,5 @@ public class Utilizador  {
 
     public boolean  comparaPassword(String password){
         return this.password.equals(password);
-    }
-
-    public void lock(){
-        this.lockUtilizador.lock();
-    }
-
-    public void unlock(){
-        this.lockUtilizador.unlock();
     }
 }

@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Cliente {
 
@@ -20,6 +21,9 @@ public class Cliente {
         try{
             String nome, password;
             sistemaRemoto = new SistemaRemoto();
+            AtomicBoolean execucao = new AtomicBoolean(true);
+            Thread threadLeituraNotificacao = new Thread(new ThreadLeituraNotificacao(sistemaRemoto,execucao));
+            threadLeituraNotificacao.start();
             int op;
             Titulo titulo = new Titulo();
             MenuInicial menuInicial = new MenuInicial(titulo);
@@ -27,51 +31,55 @@ public class Cliente {
                 menuInicial.showMenuInical();
                 op = Input.lerInt();
                 switch (op){
-                   case 1:
-                       titulo.showtitulo();
-                       System.out.println("Introduza o seu nome:");
-                       nome = Input.lerString();
-                       System.out.println("Introduza a sua password:");
-                       password = Input.lerString();
-                       try {
-                           nome = sistemaRemoto.loginUtilizador(nome, password);
-                           System.out.println("Bem vindo, " + nome);
-                           logado(sistemaRemoto,titulo,viewException);
-                       } catch (UtilizadorInexistenteException e) {
-                           viewException.showViewException(e.getMessage());
-                       } catch (PasswordIncorretaException e) {
-                           viewException.showViewException(e.getMessage());
-                       }
-                       break;
-                   case 2:
-                       titulo.showtitulo();
-                       System.out.println("Introduza o seu nome:");
-                       nome = Input.lerString();
-                       System.out.println("Introduza uma password:");
-                       password = Input.lerString();
-                       try {
-                           int id = sistemaRemoto.criarConta(nome, password);
-                           System.out.println("O id da sua conta é o " + id + ".");
-                       } catch (UtilizadorJaExisteException e) {
-                           viewException.showViewException(e.getMessage());
-                       }
-                       op = 0;
-                       break;
-                   case 0:
-                       try {
-                           sistemaRemoto.sair();
-                       } catch (IOException e) {
-                           viewException.showViewException("Erro ao terminar sessão");
-                       }
-                       System.out.println("Até Breve!");
-                       System.exit(0);
-                       break;
-                   default:
-                       viewException.showViewException("       Opção inválida!       ");
-                       break;
-               }
+                    case 1:
+                        titulo.showtitulo();
+                        System.out.println("Introduza o seu nome:");
+                        nome = Input.lerString();
+                        System.out.println("Introduza a sua password:");
+                        password = Input.lerString();
+                        try {
+                            nome = sistemaRemoto.loginUtilizador(nome, password);
+                            System.out.println("Bem vindo, " + nome);
+                            logado(sistemaRemoto,titulo,viewException);
+                        } catch (UtilizadorInexistenteException e) {
+                            viewException.showViewException(e.getMessage());
+                        } catch (PasswordIncorretaException e) {
+                            viewException.showViewException(e.getMessage());
+                        }
+                        break;
+                    case 2:
+                        titulo.showtitulo();
+                        System.out.println("Introduza o seu nome:");
+                        nome = Input.lerString();
+                        System.out.println("Introduza uma password:");
+                        password = Input.lerString();
+                        try {
+                            int id = sistemaRemoto.criarConta(nome, password);
+                            System.out.println("O id da sua conta é o " + id + ".");
+                        } catch (UtilizadorJaExisteException e) {
+                            viewException.showViewException(e.getMessage());
+                        }
+                        op = 0;
+                        break;
+                    case 0:
+                        try {
+                            execucao.set(false);
+                            threadLeituraNotificacao.join();
+                            sistemaRemoto.sair();
+                        } catch (IOException e) {
+                            viewException.showViewException("Erro ao terminar sessão");
+                        } catch (InterruptedException e) {
+                            viewException.showViewException("Erro ao terminar sessão");
+                        }
+                        System.out.println("Até Breve!");
+                        System.exit(0);
+                        break;
+                    default:
+                        viewException.showViewException("       Opção inválida!       ");
+                        break;
+                }
 
-           }while(true);
+            }while(true);
         } catch (IOException e) {
             viewException.showViewException("Algo de errado aconteceu com a ligação ao servidor");
         }
@@ -136,45 +144,45 @@ public class Cliente {
                     System.out.println("Introduza uma etiqueta");
                     etiqueta = Input.lerString();
                     try {
-                         etiquetas = sistemaRemoto.procurarMusica(etiqueta);
-                         opcao = 0;
-                         int pagina = 0;
-                         int paginaOP = 0;
-                         ListagemLista listagem = new ListagemLista("Lista de Músicas",etiquetas);
-                         do {
-                             listagem.show(opcao);
-                             opcao = Input.lerInt();
-                             switch (opcao){
-                                 case 1:
-                                     pagina -= 1;
-                                     if(pagina < 0) pagina =0;
-                                     listagem.show(pagina);
-                                     break;
-                                 case 2:
-                                     pagina += 1;
-                                     if(pagina >= listagem.getNumPaginas()) pagina = listagem.getNumPaginas() - 1;
-                                     listagem.show(pagina);
-                                     break;
-                                 case 3:
-                                     int elem = listagem.getNumPaginas();
-                                     System.out.println("\n\nQual a página?");
-                                     listagem.show();
-                                     paginaOP = Input.lerInt();
-                                     if(paginaOP < 0 || paginaOP > elem){
-                                         viewException.showViewException("Opção Inválida!");
-                                     }else{
-                                         pagina = paginaOP-1;
-                                     }
-                                     listagem.show(pagina);
-                                     break;
-                                 case 0:
-                                     listagem.show();
-                                     break;
-                                 default:
-                                     viewException.showViewException("Opção Inválida!");
-                                     break;
-                             }
-                         }while(opcao !=0);
+                        etiquetas = sistemaRemoto.procurarMusica(etiqueta);
+                        opcao = 0;
+                        int pagina = 0;
+                        int paginaOP = 0;
+                        ListagemLista listagem = new ListagemLista("Lista de Músicas",etiquetas);
+                        do {
+                            listagem.show(opcao);
+                            opcao = Input.lerInt();
+                            switch (opcao){
+                                case 1:
+                                    pagina -= 1;
+                                    if(pagina < 0) pagina =0;
+                                    listagem.show(pagina);
+                                    break;
+                                case 2:
+                                    pagina += 1;
+                                    if(pagina >= listagem.getNumPaginas()) pagina = listagem.getNumPaginas() - 1;
+                                    listagem.show(pagina);
+                                    break;
+                                case 3:
+                                    int elem = listagem.getNumPaginas();
+                                    System.out.println("\n\nQual a página?");
+                                    listagem.show();
+                                    paginaOP = Input.lerInt();
+                                    if(paginaOP < 0 || paginaOP > elem){
+                                        viewException.showViewException("Opção Inválida!");
+                                    }else{
+                                        pagina = paginaOP-1;
+                                    }
+                                    listagem.show(pagina);
+                                    break;
+                                case 0:
+                                    listagem.show();
+                                    break;
+                                default:
+                                    viewException.showViewException("Opção Inválida!");
+                                    break;
+                            }
+                        }while(opcao !=0);
                     } catch (EtiquetaInexistenteException e) {
                         viewException.showViewException(e.getMessage());
                     } catch (IOException e) {
@@ -182,19 +190,19 @@ public class Cliente {
                     }
                     break;
                 case 3:
-                        title.showtitulo();
-                        System.out.println("Introduza o id da música que pretende fazer download.");
-                        int id = Input.lerInt();
-                        System.out.println("Introduza a path para onde pretende que o download seja efetuado.");
-                        aux = Input.lerString();
-                        try{
-                            String nomeMusica = sistemaRemoto.downloadMusica(id,aux);
-                            System.out.println("Download da música " + nomeMusica + " efetuado com sucesso.");
-                        } catch (MusicaInexistenteException e) {
-                            System.out.println(e.getMessage());
-                        } catch (IOException e) {
-                            System.out.println(e.getMessage());
-                        }
+                    title.showtitulo();
+                    System.out.println("Introduza o id da música que pretende fazer download.");
+                    int id = Input.lerInt();
+                    System.out.println("Introduza a path para onde pretende que o download seja efetuado.");
+                    aux = Input.lerString();
+                    try{
+                        String nomeMusica = sistemaRemoto.downloadMusica(id,aux);
+                        System.out.println("Download da música " + nomeMusica + " efetuado com sucesso.");
+                    } catch (MusicaInexistenteException e) {
+                        System.out.println(e.getMessage());
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 default:
                     viewException.showViewException("       Opção inválida!       ");
@@ -203,3 +211,4 @@ public class Cliente {
         }while(op != 0);
     }
 }
+

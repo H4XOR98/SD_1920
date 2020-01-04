@@ -7,7 +7,10 @@ import java.net.Socket;
 public class Servidor {
     public static void main(String[] args) throws IOException {
         ServerSocket s = new ServerSocket(12345);
-        Sistema sistema = new Sistema();
+        GestorNotificacoes gestorNotificacoes = new GestorNotificacoes();
+        Sistema sistema = new Sistema(gestorNotificacoes);
+        Thread threadEnvioNotificacoes = new Thread(new ThreadEnvioNotificacoes(sistema,gestorNotificacoes));
+        threadEnvioNotificacoes.start();
         while(true){
             Socket socket = s.accept();
             new Thread(new TaskRunner(socket, sistema)).start();
