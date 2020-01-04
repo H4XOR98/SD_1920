@@ -149,8 +149,8 @@ public class Cliente {
                         int pagina = 0;
                         int paginaOP = 0;
                         ListagemLista listagem = new ListagemLista("Lista de Músicas",etiquetas);
+                        listagem.show(opcao);
                         do {
-                            listagem.show(opcao);
                             opcao = Input.lerInt();
                             switch (opcao){
                                 case 1:
@@ -166,7 +166,7 @@ public class Cliente {
                                 case 3:
                                     int elem = listagem.getNumPaginas();
                                     System.out.println("\n\nQual a página?");
-                                    listagem.show();
+                                    //listagem.show();
                                     paginaOP = Input.lerInt();
                                     if(paginaOP < 0 || paginaOP > elem){
                                         viewException.showViewException("Opção Inválida!");
@@ -176,7 +176,6 @@ public class Cliente {
                                     listagem.show(pagina);
                                     break;
                                 case 0:
-                                    listagem.show();
                                     break;
                                 default:
                                     viewException.showViewException("Opção Inválida!");
@@ -211,4 +210,3 @@ public class Cliente {
         }while(op != 0);
     }
 }
-
